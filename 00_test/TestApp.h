@@ -37,16 +37,3 @@ protected:
     virtual bool _render();
 };
 
-class CTestSystem : public CSystem
-{
-public:
-    CTestSystem( HINSTANCE t_instance ) : CSystem( t_instance )
-    {
-    }
-
-protected:
-    virtual CGraphics* _createApp()
-    {
-        return new CTestApp();
-    }
-};
