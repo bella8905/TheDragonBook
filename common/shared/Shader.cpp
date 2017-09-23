@@ -363,9 +363,7 @@ void CMVPVS::Bind( const CObject* t_obj )
     // Finanly set the constant buffer in the vertex shader with the updated values.
     _deviceContext->VSSetConstantBuffers( bufferNumber, 1, &_MVPBuffer );
 
-
     CVertexShader::Bind( t_obj );
-
 }
 
 

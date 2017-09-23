@@ -10,7 +10,7 @@
 CSystem* CSystem::_pActiveInstance = nullptr;
 
 
-CSystem::CSystem( HINSTANCE t_hinstance ) : _hinstance( t_hinstance ), _inputs( nullptr ), _graphics( nullptr )
+CSystem::CSystem( HINSTANCE t_hinstance, LPCWSTR t_appName ) : _hinstance( t_hinstance ), _inputs( nullptr ), _graphics( nullptr ), _applicationName( t_appName )
 {
 
 }
@@ -62,9 +62,7 @@ void CSystem::ShutDown()
         _graphics = nullptr;
     }
 
-
     _inputs = nullptr;
-
 
     _shutDownWindow();
 
@@ -112,6 +110,8 @@ LRESULT CALLBACK CSystem::MessageHandler( HWND t_hwnd, UINT t_umsg, WPARAM t_wpa
 {
     switch( t_umsg )
     {
+        // TODO: add support for resizing!!
+
         /*
         // WM_ACTIVATE is sent when the window is activated or deactivated.
         // We pause the game when the window is deactivated and unpause it
@@ -287,7 +287,7 @@ bool CSystem::_update()
     return true;
 }
 
-void CSystem::_initWindow( int& t_width, int& t_height )
+void CSystem::_initWindow( int& t_outWidth, int& t_outHeight )
 {
     WNDCLASSEX wc;
     DEVMODE dmScreenSettings;
@@ -295,9 +295,6 @@ void CSystem::_initWindow( int& t_width, int& t_height )
 
     // set as current instance
     _pActiveInstance = this;
-
-    // Give the application a name.
-    _applicationName = L"D3DCraft";
 
     // Setup the windows class with default settings.
     wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
@@ -317,11 +314,11 @@ void CSystem::_initWindow( int& t_width, int& t_height )
     RegisterClassEx( &wc );
 
     // Determine the resolution of the clients desktop screen.
-    t_width = GetSystemMetrics( SM_CXSCREEN );
-    t_height = GetSystemMetrics( SM_CYSCREEN );
+    t_outWidth = GetSystemMetrics( SM_CXSCREEN );
+    t_outHeight = GetSystemMetrics( SM_CYSCREEN );
 
-    int width = t_width;
-    int height = t_height;
+    int width = t_outWidth;
+    int height = t_outHeight;
 
     // Setup the screen settings depending on whether it is running in full screen or in windowed mode.
     if( CGraphics::GetIsFullScreen() )
@@ -329,8 +326,8 @@ void CSystem::_initWindow( int& t_width, int& t_height )
         // If full screen set the screen to maximum size of the users desktop and 32bit.
         memset( &dmScreenSettings, 0, sizeof( dmScreenSettings ) );
         dmScreenSettings.dmSize = sizeof( dmScreenSettings );
-        dmScreenSettings.dmPelsWidth = ( unsigned long )t_width;
-        dmScreenSettings.dmPelsHeight = ( unsigned long )t_height;
+        dmScreenSettings.dmPelsWidth = ( unsigned long )t_outWidth;
+        dmScreenSettings.dmPelsHeight = ( unsigned long )t_outHeight;
         dmScreenSettings.dmBitsPerPel = 32;
         dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
 
@@ -343,20 +340,20 @@ void CSystem::_initWindow( int& t_width, int& t_height )
     else
     {
         // If windowed then set it to default resolution.
-        CGraphics::GetDefaultScreenSize( t_width, t_height );
+        CGraphics::GetDefaultScreenSize( t_outWidth, t_outHeight );
         // calculate window dimensions using client dimensions
-        RECT wr = { 0, 0, t_width, t_height };
+        RECT wr = { 0, 0, t_outWidth, t_outHeight };
         AdjustWindowRect( &wr, WS_OVERLAPPEDWINDOW, FALSE );
 
         // Place the window in the middle of the screen.
-        posX = ( GetSystemMetrics( SM_CXSCREEN ) - t_width ) / 2;
-        posY = ( GetSystemMetrics( SM_CYSCREEN ) - t_height ) / 2;
+        posX = ( GetSystemMetrics( SM_CXSCREEN ) - t_outWidth ) / 2;
+        posY = ( GetSystemMetrics( SM_CYSCREEN ) - t_outHeight ) / 2;
 
         width = wr.right - wr.left;
         height = wr.bottom - wr.top;
     }
 
-    CGraphics::SetScreenSize( width, height );
+    CGraphics::SetScreenSize( t_outWidth, t_outHeight );
     // Create the window with the screen settings and get the handle to it.
     _hwnd = CreateWindowEx( WS_EX_APPWINDOW, _applicationName, _applicationName,
                             WS_OVERLAPPEDWINDOW,

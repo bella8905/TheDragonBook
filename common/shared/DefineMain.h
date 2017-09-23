@@ -54,23 +54,23 @@ int main()
 
 
 #define MAIN_ENTRY( app_name )                                                                                               \
-class app_name##System : public CSystem                                                                                      \
+class C##app_name##System : public CSystem                                                                                   \
 {                                                                                                                            \
 public:                                                                                                                      \
-    app_name##System( HINSTANCE t_instance ) : CSystem( t_instance )                                                         \
+    C##app_name##System( HINSTANCE t_instance ) : CSystem( t_instance, L#app_name )                                          \
     {                                                                                                                        \
     }                                                                                                                        \
                                                                                                                              \
 protected:                                                                                                                   \
     virtual CGraphics* _createApp()                                                                                          \
     {                                                                                                                        \
-        return new app_name();                                                                                               \
+        return new C##app_name##App();                                                                                       \
     }                                                                                                                        \
 };                                                                                                                           \
                                                                                                                              \
 int WINAPI wWinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow )  \
 {                                                                                                                            \
-    CSystem* system = new app_name##System( hInstance );                                                                     \
+    CSystem* system = new C##app_name##System( hInstance );                                                                  \
     if( !system ) return 1;                                                                                                  \
     bool result = system->Initialize();                                                                                      \
     if( result ) system->Run();                                                                                              \

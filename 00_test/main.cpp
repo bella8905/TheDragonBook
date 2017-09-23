@@ -7,5 +7,5 @@
 
 
 
-
-MAIN_ENTRY( CTestApp )
+// app_name => CTestApp
+MAIN_ENTRY( Test )

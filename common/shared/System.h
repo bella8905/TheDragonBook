@@ -10,7 +10,7 @@ class CApp;
 class CSystem
 {
 public:
-    CSystem( HINSTANCE t_instance );
+    CSystem( HINSTANCE t_instance, LPCWSTR t_appName = L"TheDragonBook" );
     ~CSystem();
 
 

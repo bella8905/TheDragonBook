@@ -14,6 +14,16 @@
 /////////////////////////////////////////////////////////////////
 // d3d related stuff
 /////////////////////////////////////////////////////////////////
+
+// #pragma comment(lib,"XXX")
+// https://stackoverflow.com/questions/12199595/c-what-does-pragma-commentlib-xxx-actually-do-with-xxx
+// Mostly, it's used to support different versions:
+// #ifdef USE_FIRST_VERSION
+// #pragma comment(lib, "vers1.lib")
+// #else
+// #pragma comment(lib, "vers2.lib")
+// #endif
+
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3dcompiler.lib")
@@ -49,24 +59,18 @@ CD3D::~CD3D()
 {
 }
 
-
-bool CD3D::Initialize( HWND t_hwnd, int t_clientWidth, int t_clientHeight, bool t_bVsync, bool t_bFullscreen )
+/////////////////////////////////////////////////////////////////////////////
+// query refresh rate, and video card information
+/////////////////////////////////////////////////////////////////////////////
+bool CD3D::_updateVideoCardInfo()
 {
     HRESULT result;
-
-
-    _bVsync = t_bVsync;
-
-    /////////////////////////////////////////////////////////////////////////////
-    // query refresh rate, and video card information
-    /////////////////////////////////////////////////////////////////////////////
-
 
     IDXGIFactory* factory;
     IDXGIAdapter* adapter;
     IDXGIOutput* adapterOutput;
-    unsigned int numModes, i, numerator, denominator;
-    DXGI_MODE_DESC* displayModeList;
+    // unsigned int numModes, i;
+    // DXGI_MODE_DESC* displayModeList;
     DXGI_ADAPTER_DESC adapterDesc;
 
     // Create a DirectX graphics interface factory.
@@ -90,6 +94,7 @@ bool CD3D::Initialize( HWND t_hwnd, int t_clientWidth, int t_clientHeight, bool 
         return false;
     }
 
+    /*
     // Get the number of modes that fit the DXGI_FORMAT_R8G8B8A8_UNORM display format for the adapter output (monitor).
     result = adapterOutput->GetDisplayModeList( DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, NULL );
     if( FAILED( result ) )
@@ -111,19 +116,33 @@ bool CD3D::Initialize( HWND t_hwnd, int t_clientWidth, int t_clientHeight, bool 
         return false;
     }
 
+    int width, height;
+    CGraphics::GetScreenSize( width, height );
+
+    // Display mode is for fullscreen exclusive mode...
+    // Seems we don't need to do this...
+    // https://docs.oracle.com/javase/tutorial/extra/fullscreen/displaymode.html
+    // 
     // Now go through all the display modes and find the one that matches the screen width and height.
-    // When a match is found store the numerator and denominator of the refresh rate for that monitor.
+    // When a match is found store the numerator and denominator of the refresh rate for that monitor.  
     for( i = 0; i < numModes; i++ )
     {
-        if( displayModeList[i].Width == ( unsigned int )t_clientWidth )
+        if( displayModeList[i].Width == width )
         {
-            if( displayModeList[i].Height == ( unsigned int )t_clientHeight )
+            if( displayModeList[i].Height == height )
             {
-                numerator = displayModeList[i].RefreshRate.Numerator;
-                denominator = displayModeList[i].RefreshRate.Denominator;
+                _videoCardInfo._refreshRate._numerator   = displayModeList[i].RefreshRate.Numerator;
+                _videoCardInfo._refreshRate._denominator = displayModeList[i].RefreshRate.Denominator;
+                break;
             }
         }
     }
+
+    // Release the display mode list.
+    delete[] displayModeList;
+    displayModeList = 0;
+
+    */
 
     // Get the adapter (video card) description.
     result = adapter->GetDesc( &adapterDesc );
@@ -136,17 +155,8 @@ bool CD3D::Initialize( HWND t_hwnd, int t_clientWidth, int t_clientHeight, bool 
     _videoCardInfo._videoCardMemory = ( int )( adapterDesc.DedicatedVideoMemory / 1024 / 1024 );
     _videoCardInfo._dedicatedSystemMemory = ( int )( adapterDesc.DedicatedSystemMemory / 1024 / 1024 );
     _videoCardInfo._sharedSystemMemory = ( int )( adapterDesc.SharedSystemMemory / 1024 / 1024 );
-    size_t strLen;
-    wcstombs_s( &strLen, _videoCardInfo._videoCardDescription, adapterDesc.Description, sizeof( _videoCardInfo._videoCardDescription ) );
-    if( strLen == array_size_of( _videoCardInfo._videoCardDescription ) )
-    {
-        _videoCardInfo._videoCardDescription[strLen - 1] = '\0';
-    }
+    _videoCardInfo._videoCardDescription = ConvertLPCWSTRToString( adapterDesc.Description );  
     _videoCardInfo.PrintInfo();
-
-    // Release the display mode list.
-    delete[] displayModeList;
-    displayModeList = 0;
 
     // Release the adapter output.
     ReleaseCOM( adapterOutput );
@@ -157,12 +167,18 @@ bool CD3D::Initialize( HWND t_hwnd, int t_clientWidth, int t_clientHeight, bool 
     // Release the factory.
     ReleaseCOM( factory );
 
+    return true;
+}
 
-    /////////////////////////////////////////////////////////////////////////////
-    // Create Device and Device Context.
-    //  We can create the device and context together with the swap chain,
-    //  but we'd like to also setup the msaa.
-    /////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+// Create Device and Device Context.
+//  We can create the device and context together with the swap chain,
+//  but we'd like to also setup the msaa.
+/////////////////////////////////////////////////////////////////////////////
+bool CD3D::_createDevice()
+{
+    HRESULT result;
+
     UINT createDeviceFlags = 0;
 #if defined(DEBUG) || defined(_DEBUG)  
     createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
@@ -170,11 +186,12 @@ bool CD3D::Initialize( HWND t_hwnd, int t_clientWidth, int t_clientHeight, bool 
 
     D3D_FEATURE_LEVEL featureLevel;
     result = D3D11CreateDevice(
-        0,                 // default adapter
+        nullptr,                 // default adapter
         D3D_DRIVER_TYPE_HARDWARE,
-        0,                 // no software device
+        nullptr,                 // no software device
         createDeviceFlags,
-        0, 0,              // default feature level array
+        nullptr, 
+        0,              // default feature level array
         D3D11_SDK_VERSION,
         &_device,
         &featureLevel,
@@ -193,12 +210,16 @@ bool CD3D::Initialize( HWND t_hwnd, int t_clientWidth, int t_clientHeight, bool 
         return false;
     }
 
+    return true;
+}
 
-    /////////////////////////////////////////////////////////////////////////////
-    // Check MSAA
-    //  All Direct3D 11 capable devices support 4X MSAA for all render 
-    //  target formats, so we only need to check quality support.
-    /////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+// Check MSAA
+//  All Direct3D 11 capable devices support 4X MSAA for all render 
+//  target formats, so we only need to check quality support.
+/////////////////////////////////////////////////////////////////////////////
+bool CD3D::_checkAndSetupMSAA()
+{
     _device->CheckMultisampleQualityLevels( DXGI_FORMAT_R8G8B8A8_UNORM, 4, &_4xMsaaQuality );
     if( _4xMsaaQuality == 0 )
     {
@@ -206,18 +227,26 @@ bool CD3D::Initialize( HWND t_hwnd, int t_clientWidth, int t_clientHeight, bool 
         CGraphics::SetIs4xMSAAEnabled( false );
     }
 
+    return true;
+}
 
-    /////////////////////////////////////////////////////////////////////////////
-    // Swap Chain
-    /////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+// Swap Chain
+/////////////////////////////////////////////////////////////////////////////
+bool CD3D::_createSwapChain( HWND t_hwnd )
+{
+    HRESULT result;
+
+    int width, height;
+    CGraphics::GetScreenSize( width, height );
     // Fill out a DXGI_SWAP_CHAIN_DESC to describe our swap chain.
     DXGI_SWAP_CHAIN_DESC swapChainDesc;
     ZeroMemory( &swapChainDesc, sizeof( swapChainDesc ) );
     // Set the handle for the window to render to.
     swapChainDesc.OutputWindow = t_hwnd;
     // Set the width and height of the back buffer.
-    swapChainDesc.BufferDesc.Width = t_clientWidth;
-    swapChainDesc.BufferDesc.Height = t_clientHeight;
+    swapChainDesc.BufferDesc.Width = width;
+    swapChainDesc.BufferDesc.Height = height;
     // Set to a single back buffer.
     swapChainDesc.BufferCount = 1;
     // Set regular 32-bit surface for the back buffer.
@@ -225,7 +254,7 @@ bool CD3D::Initialize( HWND t_hwnd, int t_clientWidth, int t_clientHeight, bool 
 
 
     // Set to full screen or windowed mode.
-    if( t_bFullscreen )
+    if( CGraphics::GetIsFullScreen() )
     {
         swapChainDesc.Windowed = false;
     }
@@ -234,10 +263,10 @@ bool CD3D::Initialize( HWND t_hwnd, int t_clientWidth, int t_clientHeight, bool 
         swapChainDesc.Windowed = true;
     }
     // Set the refresh rate of the back buffer.
-    if( _bVsync )
+    if( CGraphics::GetIsVsyncEnabled() )
     {
-        swapChainDesc.BufferDesc.RefreshRate.Numerator = numerator;
-        swapChainDesc.BufferDesc.RefreshRate.Denominator = denominator;
+        swapChainDesc.BufferDesc.RefreshRate.Numerator = 60;
+        swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
     }
     else
     {
@@ -270,7 +299,6 @@ bool CD3D::Initialize( HWND t_hwnd, int t_clientWidth, int t_clientHeight, bool 
     // used to create the device.  If we tried to use a different IDXGIFactory instance
     // (by calling CreateDXGIFactory), we get an error: "IDXGIFactory::CreateSwapChain: 
     // This function is being called with a device from a different IDXGIFactory."
-
     IDXGIDevice* dxgiDevice = 0;
     result = _device->QueryInterface( __uuidof( IDXGIDevice ), ( void** )&dxgiDevice );
     if( FAILED( result ) )
@@ -302,11 +330,13 @@ bool CD3D::Initialize( HWND t_hwnd, int t_clientWidth, int t_clientHeight, bool 
     ReleaseCOM( dxgiAdapter );
     ReleaseCOM( dxgiFactory );
 
+    return true;
+}
 
+bool CD3D::_createRenderTargetView()
+{
+    HRESULT result;
 
-    /////////////////////////////////////////////////////////////////////////////
-    // Back buffer
-    /////////////////////////////////////////////////////////////////////////////
     // Get the pointer to the back buffer.
     ID3D11Texture2D* backBufferPtr;
     result = _swapChain->GetBuffer( 0, __uuidof( ID3D11Texture2D ), ( LPVOID* )&backBufferPtr );
@@ -324,14 +354,22 @@ bool CD3D::Initialize( HWND t_hwnd, int t_clientWidth, int t_clientHeight, bool 
     // Release pointer to the back buffer as we no longer need it
     ReleaseCOM( backBufferPtr );
 
+    return true;
+}
+
+bool CD3D::_createDepthStensilBuffer()
+{
+    HRESULT result;
+    int width, height;
+    CGraphics::GetScreenSize( width, height );
     /////////////////////////////////////////////////////////////////////////////
-    // Depth Stenciil Buffer
+    // Depth Stencil Buffer
     /////////////////////////////////////////////////////////////////////////////
     // setup the description of the depth buffer.
     D3D11_TEXTURE2D_DESC depthBufferDesc;
     ZeroMemory( &depthBufferDesc, sizeof( depthBufferDesc ) );
-    depthBufferDesc.Width = t_clientWidth;
-    depthBufferDesc.Height = t_clientHeight;
+    depthBufferDesc.Width = width;
+    depthBufferDesc.Height = height;
     depthBufferDesc.MipLevels = 1;
     depthBufferDesc.ArraySize = 1;
     depthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -359,8 +397,6 @@ bool CD3D::Initialize( HWND t_hwnd, int t_clientWidth, int t_clientHeight, bool 
     {
         return false;
     }
-
-
 
     /////////////////////////////////////////////////////////////////////////////
     // Depth Stencil State
@@ -424,17 +460,20 @@ bool CD3D::Initialize( HWND t_hwnd, int t_clientWidth, int t_clientHeight, bool 
         return false;
     }
 
+    return true;
+}
 
-    /////////////////////////////////////////////////////////////////////////////
-    // Set Render Targets
-    /////////////////////////////////////////////////////////////////////////////
+bool CD3D::_bindViews()
+{
     // Bind the render target view and depth stencil buffer to the output render pipeline.
     _deviceContext->OMSetRenderTargets( 1, &_renderTargetView, _depthStencilView );
+    return true;
+}
 
+bool CD3D::_setupRasterizer()
+{
+    HRESULT result;
 
-    /////////////////////////////////////////////////////////////////////////////
-    // Rasterizer
-    /////////////////////////////////////////////////////////////////////////////
     // Setup the raster description which will determine how and what polygons will be drawn.
     D3D11_RASTERIZER_DESC rasterDesc;
     rasterDesc.AntialiasedLineEnable = false;
@@ -457,14 +496,18 @@ bool CD3D::Initialize( HWND t_hwnd, int t_clientWidth, int t_clientHeight, bool 
 
     _deviceContext->RSSetState( _rasterState );
 
+    return true;
+}
 
-    /////////////////////////////////////////////////////////////////////////////
-    // Viewport
-    /////////////////////////////////////////////////////////////////////////////
+bool CD3D::_setupViewport()
+{
+    int width, height;
+    CGraphics::GetScreenSize( width, height );
+
     // Setup the viewport for rendering.
     D3D11_VIEWPORT viewport;
-    viewport.Width = static_cast< float >( t_clientWidth );
-    viewport.Height = static_cast< float >( t_clientHeight );
+    viewport.Width = static_cast< float >( width );
+    viewport.Height = static_cast< float >( height );
     viewport.MinDepth = 0.0f;
     viewport.MaxDepth = 1.0f;
     viewport.TopLeftX = 0.0f;
@@ -473,11 +516,23 @@ bool CD3D::Initialize( HWND t_hwnd, int t_clientWidth, int t_clientHeight, bool 
     // Create the viewport.
     _deviceContext->RSSetViewports( 1, &viewport );
 
-
     return true;
 }
 
+bool CD3D::Initialize( HWND t_hwnd )
+{
+    if( !_updateVideoCardInfo() ) return false;
+    if( !_createDevice() ) return false;
+    if( !_checkAndSetupMSAA() ) return false;
+    if( !_createSwapChain( t_hwnd ) ) return false;
+    if( !_createRenderTargetView() ) return false;
+    if( !_createDepthStensilBuffer() ) return false;
+    if( !_bindViews() ) return false;
+    if( !_setupRasterizer() ) return false;
+    if( !_setupViewport() ) return false;
 
+    return true;
+}
 
 
 void CD3D::ShutDown()
@@ -526,7 +581,7 @@ void CD3D::BeginScene( float red, float green, float blue, float alpha )
 void CD3D::EndScene()
 {
     // Present the back buffer to the screen since rendering is complete.
-    if( _bVsync )
+    if( CGraphics::GetIsVsyncEnabled() )
     {
         // Lock to screen refresh rate.
         _swapChain->Present( 1, 0 );

@@ -77,10 +77,7 @@ protected:
     virtual bool _createFromFile( LPCWCHAR t_filename, LPCSTR t_entryPoint );
     virtual void _onDeint();
 
-
     virtual bool _createIALayout( ID3D10Blob* t_vertexShaderBuffer ) = 0;
-
-
 };
 
 

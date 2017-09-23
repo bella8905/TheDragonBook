@@ -23,8 +23,8 @@ static struct SGraphicSettings
         _bFullScreen = false;
         _bVsyncEnabled = true;
         _4xMSAAEnabled = false;
-        _defaultClientWidth = 800;
-        _defaultClientHeight = 600;
+        _defaultClientWidth = 500;
+        _defaultClientHeight = 500;
     }
 
 } Graphics_GlobalSettings;
@@ -92,7 +92,7 @@ bool CGraphics::Initialize( const int& t_clientWidth, const int& t_clientHeight,
     }
 
     // Initialize the Direct3D object.
-    if( !_d3d->Initialize( t_hwnd, t_clientWidth, t_clientHeight, GetIsVsyncEnabled(), GetIsFullScreen() ) )
+    if( !_d3d->Initialize( t_hwnd ) )
     {
         return false;
     }

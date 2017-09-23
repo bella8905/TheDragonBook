@@ -2,7 +2,7 @@
 
 #include <d3d11.h>
 #include <windows.h>
-
+#include <string>
 
 /////////////////////////////////////////////////////////////////
 // Convenience macro for releasing COM objects.
@@ -19,7 +19,7 @@ public:
 
 
 public:
-    virtual bool Initialize( HWND t_hwnd, int t_clientWidth, int t_clientHeight, bool t_bVsync, bool t_bFullscreen );
+    virtual bool Initialize( HWND t_hwnd );
     virtual void ShutDown();
 
     ID3D11Device* GetDevice()
@@ -37,15 +37,19 @@ public:
 private:
     struct VIDEOCARD_INFO
     {
-        int     _videoCardMemory;
-        int     _dedicatedSystemMemory;
-        int     _sharedSystemMemory;
-        char    _videoCardDescription[256];
+        int         _videoCardMemory;
+        int         _dedicatedSystemMemory;
+        int         _sharedSystemMemory;
+        std::string _videoCardDescription;
+//         struct
+//         {
+//             UINT _numerator;
+//             UINT _denominator;
+//         }_refreshRate;
 
         void PrintInfo();
     } _videoCardInfo;
 
-    bool                     _bVsync;
     UINT                     _4xMsaaQuality;
     IDXGISwapChain*          _swapChain;
     ID3D11Device*            _device;
@@ -56,6 +60,15 @@ private:
     ID3D11DepthStencilView*  _depthStencilView;
     ID3D11RasterizerState*   _rasterState;
 
-
-
+private:
+    // initiaize stages
+    bool _updateVideoCardInfo();
+    bool _createDevice();
+    bool _checkAndSetupMSAA();
+    bool _createSwapChain( HWND t_hwnd );
+    bool _createRenderTargetView();
+    bool _createDepthStensilBuffer();
+    bool _bindViews();
+    bool _setupRasterizer();
+    bool _setupViewport();
 };
