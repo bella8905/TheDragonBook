@@ -29,6 +29,10 @@ public:
 
     LRESULT CALLBACK MessageHandler( HWND t_hwnd, UINT t_umsg, WPARAM t_wparam, LPARAM t_lparam );
 
+    CGraphics* GetGraphics()
+    {
+        return _graphics;
+    }
 
 private:
     bool _update();
@@ -52,3 +56,6 @@ protected:
 
 
 static LRESULT CALLBACK WndProc( HWND t_hwnd, UINT t_umsg, WPARAM t_wparam, LPARAM t_lparam );
+
+// public interfaces
+CGraphics* System_GetGraphics();

@@ -7,6 +7,7 @@
 
 
 #include "Graphics.h"
+#include "View.h"
 #include "D3DSystem.h"
 
 
@@ -96,7 +97,7 @@ bool CD3D::_updateVideoCardInfo()
 
     /*
     // Get the number of modes that fit the DXGI_FORMAT_R8G8B8A8_UNORM display format for the adapter output (monitor).
-    result = adapterOutput->GetDisplayModeList( DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, NULL );
+    result = adapterOutput->GetDisplayModeList( DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, nullptr );
     if( FAILED( result ) )
     {
         return false;
@@ -172,8 +173,15 @@ bool CD3D::_updateVideoCardInfo()
 
 /////////////////////////////////////////////////////////////////////////////
 // Create Device and Device Context.
-//  We can create the device and context together with the swap chain,
-//  but we'd like to also setup the msaa.
+//
+// Device: 
+//  a device is an object that is intended to be 
+//  a virtual representation of your video adapter.
+//
+// Device Context: 
+//  a device context is responsible for managing the GPU 
+//  and the rendering pipeline (the device mostly handles video memory). 
+//  This object is used to render graphics and to determine how they will be rendered.
 /////////////////////////////////////////////////////////////////////////////
 bool CD3D::_createDevice()
 {
@@ -240,60 +248,60 @@ bool CD3D::_createSwapChain( HWND t_hwnd )
     int width, height;
     CGraphics::GetScreenSize( width, height );
     // Fill out a DXGI_SWAP_CHAIN_DESC to describe our swap chain.
-    DXGI_SWAP_CHAIN_DESC swapChainDesc;
-    ZeroMemory( &swapChainDesc, sizeof( swapChainDesc ) );
+    DXGI_SWAP_CHAIN_DESC scd;
+    ZeroMemory( &scd, sizeof( scd ) );
     // Set the handle for the window to render to.
-    swapChainDesc.OutputWindow = t_hwnd;
+    scd.OutputWindow = t_hwnd;
     // Set the width and height of the back buffer.
-    swapChainDesc.BufferDesc.Width = width;
-    swapChainDesc.BufferDesc.Height = height;
+    scd.BufferDesc.Width = width;
+    scd.BufferDesc.Height = height;
     // Set to a single back buffer.
-    swapChainDesc.BufferCount = 1;
+    scd.BufferCount = 1;
     // Set regular 32-bit surface for the back buffer.
-    swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    scd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 
 
     // Set to full screen or windowed mode.
     if( CGraphics::GetIsFullScreen() )
     {
-        swapChainDesc.Windowed = false;
+        scd.Windowed = false;
     }
     else
     {
-        swapChainDesc.Windowed = true;
+        scd.Windowed = true;
     }
     // Set the refresh rate of the back buffer.
     if( CGraphics::GetIsVsyncEnabled() )
     {
-        swapChainDesc.BufferDesc.RefreshRate.Numerator = 60;
-        swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
+        scd.BufferDesc.RefreshRate.Numerator = 60;
+        scd.BufferDesc.RefreshRate.Denominator = 1;
     }
     else
     {
-        swapChainDesc.BufferDesc.RefreshRate.Numerator = 0;
-        swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
+        scd.BufferDesc.RefreshRate.Numerator = 0;
+        scd.BufferDesc.RefreshRate.Denominator = 1;
     }
     // Use 4X MSAA? 
     if( CGraphics::GetIs4xMSAAEnabled() )
     {
-        swapChainDesc.SampleDesc.Count = 4;
-        swapChainDesc.SampleDesc.Quality = _4xMsaaQuality - 1;
+        scd.SampleDesc.Count = 4;
+        scd.SampleDesc.Quality = _4xMsaaQuality - 1;
     }
     // No MSAA
     else
     {
-        swapChainDesc.SampleDesc.Count = 1;
-        swapChainDesc.SampleDesc.Quality = 0;
+        scd.SampleDesc.Count = 1;
+        scd.SampleDesc.Quality = 0;
     }
     // Set the usage of the back buffer.
-    swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+    scd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
     // Set the scan line ordering and scaling to unspecified.
-    swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-    swapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+    scd.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+    scd.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
     // Discard the back buffer contents after presenting.
-    swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+    scd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
     // Don't set the advanced flags.
-    swapChainDesc.Flags = 0;
+    scd.Flags = 0;
 
     // To correctly create the swap chain, we must use the IDXGIFactory that was
     // used to create the device.  If we tried to use a different IDXGIFactory instance
@@ -320,7 +328,7 @@ bool CD3D::_createSwapChain( HWND t_hwnd )
         return false;
     }
 
-    result = dxgiFactory->CreateSwapChain( _device, &swapChainDesc, &_swapChain );
+    result = dxgiFactory->CreateSwapChain( _device, &scd, &_swapChain );
     if( FAILED( result ) )
     {
         return false;
@@ -346,7 +354,7 @@ bool CD3D::_createRenderTargetView()
     }
 
     // Create the render target view with the back buffer pointer.
-    result = _device->CreateRenderTargetView( backBufferPtr, NULL, &_renderTargetView );
+    result = _device->CreateRenderTargetView( backBufferPtr, nullptr, &_renderTargetView );
     if( FAILED( result ) )
     {
         return false;
@@ -392,7 +400,7 @@ bool CD3D::_createDepthStensilBuffer()
     depthBufferDesc.MiscFlags = 0;
 
     // Create the texture for the depth buffer using the filled out description.
-    result = _device->CreateTexture2D( &depthBufferDesc, NULL, &_depthStencilBuffer );
+    result = _device->CreateTexture2D( &depthBufferDesc, nullptr, &_depthStencilBuffer );
     if( FAILED( result ) )
     {
         return false;
@@ -499,24 +507,52 @@ bool CD3D::_setupRasterizer()
     return true;
 }
 
-bool CD3D::_setupViewport()
+void CD3D::SetViewport( const SViewPort& t_viewport )
 {
-    int width, height;
-    CGraphics::GetScreenSize( width, height );
-
     // Setup the viewport for rendering.
     D3D11_VIEWPORT viewport;
-    viewport.Width = static_cast< float >( width );
-    viewport.Height = static_cast< float >( height );
-    viewport.MinDepth = 0.0f;
-    viewport.MaxDepth = 1.0f;
-    viewport.TopLeftX = 0.0f;
-    viewport.TopLeftY = 0.0f;
+    viewport.Width = static_cast< float >( t_viewport._width );
+    viewport.Height = static_cast< float >( t_viewport._height );
+    viewport.MinDepth = t_viewport._minZ;
+    viewport.MaxDepth = t_viewport._maxZ;
+    viewport.TopLeftX = t_viewport._x;
+    viewport.TopLeftY = t_viewport._y;
 
     // Create the viewport.
     _deviceContext->RSSetViewports( 1, &viewport );
 
-    return true;
+    // viewport and scissor don't work for ClearRenderTargetView and ClearDepthStencilView
+    // if viewport is using the same rendertarget view
+    // ClearXXXView are defined as memory operations that don¡¯t care about the current render pipeline state.
+    // https://social.msdn.microsoft.com/Forums/en-US/718add22-9b8e-4158-9303-1655be85782a/clearrendertargetview-and-scissor-rects?forum=direct3d
+    //
+    //
+    // also do the scissor test
+    // so pixels outside of viewport will be discarded
+    // https://msdn.microsoft.com/en-us/library/windows/desktop/bb205126(v=vs.85).aspx
+//     D3D11_RECT rect;
+//     rect.left = static_cast< LONG >( t_viewport._x );
+//     rect.right = rect.left + t_viewport._width;
+//     rect.top = static_cast< LONG >( t_viewport._y );
+//     rect.bottom = rect.top + t_viewport._height;;
+// 
+//     _deviceContext->RSSetScissorRects( 1, &rect );
+}
+
+void CD3D::_setDefaultViewport()
+{
+    int width, height;
+    CGraphics::GetScreenSize( width, height );
+
+    SViewPort viewport;
+    viewport._width = width;
+    viewport._height = height;
+    viewport._minZ = 0.0f;
+    viewport._maxZ = 1.0f;
+    viewport._x = 0.0f;
+    viewport._y = 0.0f;
+
+    SetViewport( viewport );
 }
 
 bool CD3D::Initialize( HWND t_hwnd )
@@ -529,7 +565,8 @@ bool CD3D::Initialize( HWND t_hwnd )
     if( !_createDepthStensilBuffer() ) return false;
     if( !_bindViews() ) return false;
     if( !_setupRasterizer() ) return false;
-    if( !_setupViewport() ) return false;
+
+    _setDefaultViewport();
 
     return true;
 }
@@ -538,10 +575,13 @@ bool CD3D::Initialize( HWND t_hwnd )
 void CD3D::ShutDown()
 {
 
-    // Before shutting down set to windowed mode or when you release the swap chain it will throw an exception.
+    // Direct3D is actually incapable of closing when in fullscreen mode.
+    // This is due to certain threading issues that occur behind the scenes.
+    // To correctly close down, we must make sure that we are in windowed mode.
+    // http://www.directxtutorial.com/Lesson.aspx?lessonid=11-4-4
     if( _swapChain )
     {
-        _swapChain->SetFullscreenState( false, NULL );
+        _swapChain->SetFullscreenState( false, nullptr );
     }
 
     ReleaseCOM( _rasterState );

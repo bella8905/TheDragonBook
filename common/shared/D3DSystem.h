@@ -9,7 +9,7 @@
 /////////////////////////////////////////////////////////////////
 #define ReleaseCOM(x) { if(x){ x->Release(); x = 0; } }
 
-
+struct SViewPort;
 
 class CD3D
 {
@@ -34,6 +34,7 @@ public:
     void BeginScene( float, float, float, float );
     void EndScene();
 
+    void SetViewport( const SViewPort& t_viewport );
 private:
     struct VIDEOCARD_INFO
     {
@@ -70,5 +71,6 @@ private:
     bool _createDepthStensilBuffer();
     bool _bindViews();
     bool _setupRasterizer();
-    bool _setupViewport();
+    void _setDefaultViewport();
+
 };

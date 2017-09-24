@@ -3,38 +3,33 @@
 #include "glm/glm.hpp"
 #include "Utl_Global.h"
 
+/////////////////////////////////////////////////////////////////
+//
+// Destination window when rendering
+//
+/////////////////////////////////////////////////////////////////
+struct SViewPort
+{
+    us _width, _height;
+    float _x, _y, _maxZ, _minZ;
+
+    SViewPort()
+    {
+        // defaults
+        _x = 0.0f;
+        _y = 0.0f;
+        _width = 200;
+        _height = 200;
+        _maxZ = 1.0f;
+        _minZ = 0.0f;
+    }
+};
+
+
 class CView
 {
 
 public:
-    /////////////////////////////////////////////////////////////////
-    //
-    // 
-    //
-    /////////////////////////////////////////////////////////////////
-    struct SViewPort
-    {
-        us _x, _y, _width, _height;
-        float _maxZ, _minZ;
-
-        SViewPort()
-        {
-            // defaults
-            _x = 0;
-            _y = 0;
-            _width = 800;
-            _height = 600;
-            _maxZ = 1;
-            _minZ = -1;
-        }
-
-        void SetAsActive()
-        {
-            // fill it!
-
-
-        }
-    };
 
     struct SFrustum
     {

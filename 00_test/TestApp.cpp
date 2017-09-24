@@ -28,6 +28,8 @@ void CTestApp::SCENE::Init()
     _pFreeflyCam = new CFreeFlyCamera( ToPositon( camPos ), ToPositon( camTarget ), glm::vec4( 0.f, 1.f, 0.f, 0.f ) );
 
     CView view;
+    SViewPort viewport;
+    view.SetViewport( viewport );
     _pFreeflyCam->SetToView( &view );
     // view.SetCameraPostionFaceAndUp( ToPositon( camPos ), ToDirection( camFace ) );
     view.SetHorizontalFieldOfView( DegToRad( 80.f ) );

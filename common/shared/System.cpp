@@ -72,8 +72,6 @@ void CSystem::Run()
 {
     MSG msg;
     bool bDone, result;
-
-
     // Initialize the message structure.
     ZeroMemory( &msg, sizeof( MSG ) );
 
@@ -81,6 +79,9 @@ void CSystem::Run()
     bDone = false;
     while( !bDone )
     {
+        // PeekMessage vs GetMessare
+        // http://www.directxtutorial.com/Lesson.aspx?lessonid=11-1-5
+
         // Handle the windows messages.
         if( PeekMessage( &msg, nullptr, 0, 0, PM_REMOVE ) )
         {
@@ -339,6 +340,9 @@ void CSystem::_initWindow( int& t_outWidth, int& t_outHeight )
     }
     else
     {
+        // window size vs client size
+        // http://www.directxtutorial.com/Lesson.aspx?lessonid=11-1-4
+
         // If windowed then set it to default resolution.
         CGraphics::GetDefaultScreenSize( t_outWidth, t_outHeight );
         // calculate window dimensions using client dimensions
@@ -407,3 +411,14 @@ LRESULT CALLBACK WndProc( HWND t_hwnd, UINT t_umsg, WPARAM t_wparam, LPARAM t_lp
     return 0;
 }
 
+
+
+CGraphics* System_GetGraphics()
+{
+    if( CSystem::GetActiveInstance() != nullptr )
+    {
+        return CSystem::GetActiveInstance()->GetGraphics();
+    }
+
+    return nullptr;
+}

@@ -3,7 +3,7 @@
 #include "Utl_Math.h"
 #include "View.h"
 #include "Graphics.h"
-
+#include "System.h"
 
 
 static struct
@@ -16,14 +16,20 @@ void View_SetAsActive( CView* t_view )
 {
     View._view = *t_view;
     // also marked as being used viewport
-    CView::SViewPort* viewport = t_view->GetViewPort();
-    viewport->SetAsActive();
+    SViewPort* viewport = t_view->GetViewPort();
+    // set destination window to graphics module
+    CGraphics* graphics = System_GetGraphics();
+    if( graphics != nullptr && viewport != nullptr )
+    {
+        graphics->SetViewport( *viewport );
+    }
 }
 
 CView* View_GetActive()
 {
     return &View._view;
 }
+
 
 void CView::initDefaults()
 {
@@ -52,10 +58,7 @@ void CView::initDefaults()
     viewport._width = ( us )winWidth;
     viewport._height = ( us )winHeight;
 
-
     SetViewport( viewport );
-
-
 }
 
 void CView::updateWorld2ViewMatrix()
@@ -310,7 +313,7 @@ void CView::updateViewPort()
     }
 }
 
-CView::SViewPort* CView::GetViewPort()
+SViewPort* CView::GetViewPort()
 {
     if( ( _dirtyFlags & _DIRTY_FLAG_VIEW_PORT ) != 0 )
     {

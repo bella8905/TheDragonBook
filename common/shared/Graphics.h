@@ -5,6 +5,7 @@
 #include "Object.h"
 
 class CD3D;
+struct SViewPort;
 
 class CGraphics
 {
@@ -25,6 +26,9 @@ public:
     static void GetDefaultScreenSize( int& t_clientWidth, int& t_clientHeight );
     static void GetScreenSize( int& t_clientWidth, int& t_clientHeight );
     static void SetScreenSize( int t_clientWidth, int t_clientHeight );
+
+    // public interfaces
+    void SetViewport( const SViewPort& t_viewport );
 
 protected:
     CD3D* _d3d;

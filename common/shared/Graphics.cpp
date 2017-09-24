@@ -1,4 +1,5 @@
 #include "D3DSystem.h"
+#include "View.h"
 
 #include "Graphics.h"
 
@@ -23,8 +24,8 @@ static struct SGraphicSettings
         _bFullScreen = false;
         _bVsyncEnabled = true;
         _4xMSAAEnabled = false;
-        _defaultClientWidth = 500;
-        _defaultClientHeight = 500;
+        _defaultClientWidth = 800;
+        _defaultClientHeight = 600;
     }
 
 } Graphics_GlobalSettings;
@@ -121,3 +122,10 @@ bool CGraphics::Frame()
     return _render();
 }
 
+void CGraphics::SetViewport( const SViewPort& t_viewport )
+{
+    if( _d3d != nullptr )
+    {
+        _d3d->SetViewport( t_viewport );
+    }
+}

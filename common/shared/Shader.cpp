@@ -159,7 +159,7 @@ ID3D10Blob* CShader::_compileShaderToBuffer( LPCWCHAR t_filename, LPCSTR t_entry
     dwShaderFlags |= D3DCOMPILE_SKIP_OPTIMIZATION;
 #endif
     // Compile the vertex shader code.
-    result = D3DCompileFromFile( t_filename, NULL, NULL, t_entryPoint, t_target, dwShaderFlags, 0,
+    result = D3DCompileFromFile( t_filename, nullptr, nullptr, t_entryPoint, t_target, dwShaderFlags, 0,
                                  &shaderBuffer, &errorMessage );
     if( FAILED( result ) )
     {
@@ -207,7 +207,7 @@ bool CVertexShader::_createFromFile( LPCWCHAR t_filename, LPCSTR t_entryPoint )
     if( !vertexShaderBuffer ) return false;
 
     // Create the vertex shader from the buffer.
-    result = _device->CreateVertexShader( vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &_vertexShader );
+    result = _device->CreateVertexShader( vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), nullptr, &_vertexShader );
     if( FAILED( result ) )
     {
         return false;
@@ -230,7 +230,7 @@ void CVertexShader::Bind( const CObject* t_obj )
     _deviceContext->IASetInputLayout( _layout );
 
     // Set the vertex and pixel shaders that will be used to render this triangle.
-    _deviceContext->VSSetShader( _vertexShader, NULL, 0 );
+    _deviceContext->VSSetShader( _vertexShader, nullptr, 0 );
 }
 
 
@@ -252,7 +252,7 @@ bool CPixelShader::_createFromFile( LPCWCHAR t_filename, LPCSTR t_entryPoint )
     if( !pixelShaderBuffer ) return false;
 
     // Create the vertex shader from the buffer.
-    result = _device->CreatePixelShader( pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &_pixelShader );
+    result = _device->CreatePixelShader( pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), nullptr, &_pixelShader );
     if( FAILED( result ) )
     {
         return false;
@@ -266,7 +266,7 @@ bool CPixelShader::_createFromFile( LPCWCHAR t_filename, LPCSTR t_entryPoint )
 
 void CPixelShader::Bind( const CObject* t_obj )
 {
-    _deviceContext->PSSetShader( _pixelShader, NULL, 0 );
+    _deviceContext->PSSetShader( _pixelShader, nullptr, 0 );
 }
 
 
@@ -316,6 +316,8 @@ bool CMVPVS::_postCreateShader()
 {
     // Setup the description of the dynamic matrix constant buffer that is in the vertex shader.
     D3D11_BUFFER_DESC matrixBufferDesc;
+    ZeroMemory( &matrixBufferDesc, sizeof( matrixBufferDesc ) );
+
     matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
     matrixBufferDesc.ByteWidth = sizeof( MVPBlock );
     matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
@@ -324,7 +326,7 @@ bool CMVPVS::_postCreateShader()
     matrixBufferDesc.StructureByteStride = 0;
 
     // Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
-    HRESULT result = _device->CreateBuffer( &matrixBufferDesc, NULL, &_MVPBuffer );
+    HRESULT result = _device->CreateBuffer( &matrixBufferDesc, nullptr, &_MVPBuffer );
     if( FAILED( result ) )
     {
         return false;
