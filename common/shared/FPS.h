@@ -10,6 +10,7 @@ public:
 private:
     double _secondsPerCount;;
     float _deltaTime;
+    uint  _fps;
 
 public:
     void Update();
@@ -18,15 +19,8 @@ public:
         return _deltaTime;
     }
 
-    float GetFPS() 
+    uint GetFPS() 
     {
-        if( _deltaTime > 0 )
-        {
-            return 1.0f / _deltaTime;
-        }
-        else 
-        {
-            return 0;
-        }
+        return _fps;
     }
 };
