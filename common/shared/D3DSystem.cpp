@@ -484,14 +484,14 @@ bool CD3D::_setupRasterizer()
 
     // Setup the raster description which will determine how and what polygons will be drawn.
     D3D11_RASTERIZER_DESC rasterDesc;
-    rasterDesc.AntialiasedLineEnable = false;
+    rasterDesc.AntialiasedLineEnable = CGraphics::GetIs4xMSAAEnabled();
     rasterDesc.CullMode = D3D11_CULL_BACK;
     rasterDesc.DepthBias = 0;
     rasterDesc.DepthBiasClamp = 0.0f;
     rasterDesc.DepthClipEnable = true;
     rasterDesc.FillMode = D3D11_FILL_SOLID;
     rasterDesc.FrontCounterClockwise = true;
-    rasterDesc.MultisampleEnable = false;
+    rasterDesc.MultisampleEnable = CGraphics::GetIs4xMSAAEnabled();
     rasterDesc.ScissorEnable = false;
     rasterDesc.SlopeScaledDepthBias = 0.0f;
 
@@ -559,7 +559,10 @@ bool CD3D::Initialize( HWND t_hwnd )
 {
     if( !_updateVideoCardInfo() ) return false;
     if( !_createDevice() ) return false;
-    if( !_checkAndSetupMSAA() ) return false;
+    if( CGraphics::GetIs4xMSAAEnabled() )
+    {
+        if( !_checkAndSetupMSAA() ) return false;
+    }
     if( !_createSwapChain( t_hwnd ) ) return false;
     if( !_createRenderTargetView() ) return false;
     if( !_createDepthStensilBuffer() ) return false;

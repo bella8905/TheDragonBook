@@ -23,7 +23,7 @@ static struct SGraphicSettings
     {
         _bFullScreen = false;
         _bVsyncEnabled = true;
-        _4xMSAAEnabled = false;
+        _4xMSAAEnabled = true;
         _defaultClientWidth = 800;
         _defaultClientHeight = 600;
     }
