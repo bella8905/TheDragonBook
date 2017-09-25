@@ -277,6 +277,9 @@ bool CSystem::_update()
 
     if( _graphics != nullptr )
     {
+        _fpsCounter.Update();
+        LogMsg << _fpsCounter.GetFPS() << LogEndl;
+
         if( !_graphics->Frame() )
         {
             return false;

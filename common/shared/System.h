@@ -2,6 +2,8 @@
 
 #include <windows.h>
 
+#include "FPS.h"
+
 class CInput;
 class CGraphics;
 class CApp;
@@ -46,6 +48,7 @@ private:
 
     CInput* _inputs;
     CGraphics* _graphics;
+    CFPSCounter _fpsCounter;
 
 protected:
     //////////////////////////////////////////////////////////////////////////
