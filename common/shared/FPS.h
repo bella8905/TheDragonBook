@@ -8,7 +8,7 @@ public:
     ~CFPSCounter() { }
 
 private:
-    double _secondsPerCount;;
+    float _secondsPerCount;;
     float _deltaTime;
     uint  _fps;
 

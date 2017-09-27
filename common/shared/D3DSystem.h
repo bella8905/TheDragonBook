@@ -59,7 +59,7 @@ private:
     ID3D11Texture2D*         _depthStencilBuffer;
     ID3D11DepthStencilState* _depthStencilState;
     ID3D11DepthStencilView*  _depthStencilView;
-    ID3D11RasterizerState*   _rasterState;
+    ID3D11RasterizerState*   _rasterizerState;
 
 private:
     // initiaize stages

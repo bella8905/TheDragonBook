@@ -8,7 +8,7 @@ CFPSCounter::CFPSCounter() : _deltaTime( 0.0f ), _fps( 0 )
 {
     long long int countsPerSec;
     QueryPerformanceFrequency( ( LARGE_INTEGER* )&countsPerSec );
-    _secondsPerCount = 1.0 / countsPerSec;
+    _secondsPerCount = 1.0f / countsPerSec;
 }
 
 void CFPSCounter::Update()
@@ -22,12 +22,15 @@ void CFPSCounter::Update()
     _deltaTime = ( float )( curTime - prevTime ) * _secondsPerCount;
     prevTime = curTime;
 
-    fps++;
     timeElapsed += _deltaTime;
     if( timeElapsed >= 1.0 )
     {
         _fps = fps;
         fps = 0;
         timeElapsed = 0;
+    }
+    else
+    {
+        fps++;
     }
 }

@@ -54,7 +54,7 @@ void CGeo::_generateBufferFromData( std::vector<SVertex>& t_vertices, std::vecto
     // Set up the description of the static vertex buffer.
     ID3D11Buffer* vertexBuffer;
     D3D11_BUFFER_DESC vertexBufferDesc;
-    vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+    vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
     vertexBufferDesc.ByteWidth = sizeof( SVertex ) * t_vertices.size();
     vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     vertexBufferDesc.CPUAccessFlags = 0;
@@ -80,7 +80,7 @@ void CGeo::_generateBufferFromData( std::vector<SVertex>& t_vertices, std::vecto
     ID3D11Buffer* indexBuffer;
     // Set up the description of the static index buffer.
     D3D11_BUFFER_DESC indexBufferDesc;
-    indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+    indexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
     indexBufferDesc.ByteWidth = sizeof( uint ) * t_indices.size();
     indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
     indexBufferDesc.CPUAccessFlags = 0;

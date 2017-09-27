@@ -51,7 +51,7 @@ CD3D::CD3D()
     _depthStencilBuffer = nullptr;
     _depthStencilState = nullptr;
     _depthStencilView = nullptr;
-    _rasterState = nullptr;
+    _rasterizerState = nullptr;
 }
 
 
@@ -490,19 +490,19 @@ bool CD3D::_setupRasterizer()
     rasterDesc.DepthBiasClamp = 0.0f;
     rasterDesc.DepthClipEnable = true;
     rasterDesc.FillMode = D3D11_FILL_SOLID;
-    rasterDesc.FrontCounterClockwise = true;
+    rasterDesc.FrontCounterClockwise = true;    // we use right handed coordinate system, so we say counter clockwise is the front face
     rasterDesc.MultisampleEnable = CGraphics::GetIs4xMSAAEnabled();
     rasterDesc.ScissorEnable = false;
     rasterDesc.SlopeScaledDepthBias = 0.0f;
 
     // Create the rasterizer state from the description we just filled out.
-    result = _device->CreateRasterizerState( &rasterDesc, &_rasterState );
+    result = _device->CreateRasterizerState( &rasterDesc, &_rasterizerState );
     if( FAILED( result ) )
     {
         return false;
     }
 
-    _deviceContext->RSSetState( _rasterState );
+    _deviceContext->RSSetState( _rasterizerState );
 
     return true;
 }
@@ -587,7 +587,7 @@ void CD3D::ShutDown()
         _swapChain->SetFullscreenState( false, nullptr );
     }
 
-    ReleaseCOM( _rasterState );
+    ReleaseCOM( _rasterizerState );
     ReleaseCOM( _depthStencilView );
     ReleaseCOM( _depthStencilState );
     ReleaseCOM( _depthStencilBuffer );
