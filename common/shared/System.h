@@ -6,6 +6,7 @@
 
 class CInput;
 class CGraphics;
+class CD3D;
 class CApp;
 
 

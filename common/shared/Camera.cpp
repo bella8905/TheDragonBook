@@ -101,6 +101,7 @@ void CFreeFlyCamera::UpdateControl( double t_delta )
                     glm::vec3 z = glm::normalize( ToVec3( _facing ) );
                     glm::vec3 right = glm::normalize( glm::cross( z, glm::vec3( _up ) ) );
                     _pos += ( float )deltaX * ( float )t_delta * _cameraHehaviors[b]._speed * ToDirection( right ) + ( float )deltaY * ( float )t_delta * _cameraHehaviors[b]._speed * _up;
+                    _aim += ( float )deltaX * ( float )t_delta * _cameraHehaviors[b]._speed * ToDirection( right ) + ( float )deltaY * ( float )t_delta * _cameraHehaviors[b]._speed * _up;
                 } break;
                 case CAMERA_ORBIT:
                 {

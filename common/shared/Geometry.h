@@ -6,21 +6,6 @@
 
 #include "Utl_Global.h"
 
-struct SVertex
-{
-    glm::vec3 _position;
-    glm::vec3 _normal;
-    glm::vec4 _color;
-    //     glm::vec2 _texCoord0;
-    //     glm::vec2 _texCoord1;
-
-    SVertex() : _position( 0.f ), _normal( 0.f, 0.f, -1.f ), _color( 1.f, 0.f, 0.f, 1.f )
-    {
-
-    }
-
-    SVertex( glm::vec3 t_pos, glm::vec3 t_normal, glm::vec4 t_color );
-};
 
 
 enum GEO_TYPE
@@ -52,7 +37,7 @@ public:
 
 protected:
     void _clearBuffer();
-    void _generateBufferFromData( std::vector<SVertex>& t_vertices, std::vector<uint>& _indices );
+    void _generateBufferFromData( const std::vector<SVertex>& t_vertices, const std::vector<uint>& _indices );
     virtual void _generateBuffer() = 0;
 
 protected:

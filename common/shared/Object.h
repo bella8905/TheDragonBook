@@ -28,6 +28,12 @@ protected:
     void resetModelMatrix();
 
 public:
+    //
+    // TODO:
+    // DON'T UPDATE MATRIX IMMEDIATELY,
+    // HAVE A DIRTY FLAG AND ONLY UPDATE WHEN WE WANT TO USE IT.
+    // TODO:
+    //
     void SetupModelMatrix( const glm::vec3& t_translate, const glm::vec3& t_rot, const float& t_scale );
     void SetupModelMatrix( const glm::vec3& t_translate, const glm::mat3& t_rot, const float& t_scale );
 

@@ -6,11 +6,6 @@
 #include "Geometry.h"
 
 
-SVertex::SVertex( glm::vec3 t_pos, glm::vec3 t_normal, glm::vec4 t_color ) : _position( t_pos ), _normal( t_normal ), _color( t_color )
-{
-
-}
-
 
 void CGeo::Init( ID3D11Device* t_device, ID3D11DeviceContext* t_deviceContext )
 {
@@ -49,7 +44,7 @@ void CGeo::Draw()
     _deviceContext->DrawIndexed( _vsInput._numOfIndices, 0, 0 );
 }
 
-void CGeo::_generateBufferFromData( std::vector<SVertex>& t_vertices, std::vector<uint>& t_indices )
+void CGeo::_generateBufferFromData( const std::vector<SVertex>& t_vertices, const std::vector<uint>& t_indices )
 {
     // Set up the description of the static vertex buffer.
     ID3D11Buffer* vertexBuffer;

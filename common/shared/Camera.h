@@ -69,7 +69,7 @@ class CFreeFlyCamera : public CCamera
 {
 public:
     CFreeFlyCamera( glm::vec4 t_pos = glm::vec4( 0.f, 0.f, 0.f, 1.f ),
-                    glm::vec4 t_aim = glm::vec4( 0.f, 0.f, 0.f, 0.f ),
+                    glm::vec4 t_aim = glm::vec4( 0.f, 0.f, 0.f, 1.f ),
                     glm::vec4 t_up = glm::vec4( 0.f, 1.f, 0.f, 0.f ) );
 
     virtual  ~CFreeFlyCamera()
