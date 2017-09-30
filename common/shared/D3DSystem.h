@@ -4,6 +4,9 @@
 #include <windows.h>
 #include <string>
 
+struct SMesh;
+
+
 /////////////////////////////////////////////////////////////////
 // Convenience macro for releasing COM objects.
 /////////////////////////////////////////////////////////////////
@@ -73,4 +76,6 @@ private:
     bool _setupRasterizer();
     void _setDefaultViewport();
 
+public:
+	bool CreateBufferFromMeshData( const SMesh& t_mesh, ID3D11Buffer** t_vertexBufferOut, ID3D11Buffer** t_indexBufferOut = nullptr );
 };

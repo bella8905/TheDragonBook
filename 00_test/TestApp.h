@@ -9,6 +9,9 @@ class CCamera;
 
 class CTestApp : public CGraphics
 {
+public:
+	CTestApp() : _gridVertexBuffer( nullptr ), _gridIndexBuffer( nullptr ) {}
+
 private:
     struct SCENE
     {
@@ -26,6 +29,9 @@ private:
         void Draw();
 
     } _scene;
+
+	ID3D11Buffer* _gridVertexBuffer;
+	ID3D11Buffer* _gridIndexBuffer;
 
 private:
     virtual void _initModules();

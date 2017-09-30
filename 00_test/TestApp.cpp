@@ -8,6 +8,7 @@
 #include "Geometry.h"
 #include "View.h"
 #include "Camera.h"
+#include "GeoGenerator.h"
 
 
 #include "TestApp.h"
@@ -64,7 +65,20 @@ void CTestApp::SCENE::Draw()
 
 void CTestApp::_initScene()
 {
+	assert( _d3d != nullptr );
+
     _scene.Init();
+	CGeoGenerator geoGen;
+	SMesh grid;
+	float gridWidth = 10;
+	float gridDepth = 20;
+	uint m = 10;
+	uint n = 10;
+	geoGen.BuildGrid( gridWidth, gridDepth, m, n, grid );
+	if( !_d3d->CreateBufferFromMeshData( grid, &_gridVertexBuffer, &_gridIndexBuffer ) )
+	{
+		// LogError<< ""
+	}
 }
 
 void CTestApp::_initModules()
