@@ -13,7 +13,7 @@ cbuffer ConstantBuffer : register( b0 )
 struct VS_IN
 {
 	float3 position : POSITION;
-	float3 normal : NORMAL;
+	// float3 normal : NORMAL;
 	float4 color : COLOR;
 };
 

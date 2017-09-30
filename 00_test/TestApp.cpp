@@ -65,21 +65,21 @@ void CTestApp::SCENE::Draw()
 
 void CTestApp::_initScene()
 {
-	assert( _d3d != nullptr );
+    assert( _d3d != nullptr );
 
     _scene.Init();
-	CGeoGenerator geoGen;
-	SMesh grid;
-	float gridWidth = 10;
-	float gridDepth = 20;
-	uint m = 10;
-	uint n = 10;
+    CGeoGenerator geoGen;
+    SMesh grid;
+    float gridWidth = 10;
+    float gridDepth = 20;
+    uint m = 10;
+    uint n = 10;
     glm::vec4 color( 1.f );
-	geoGen.BuildGrid( gridWidth, gridDepth, m, n, color, grid );
-	if( !_d3d->CreateBufferFromMeshData( grid, &_gridVertexBuffer, &_gridIndexBuffer ) )
-	{
-		// LogError<< ""
-	}
+    geoGen.BuildGrid( gridWidth, gridDepth, m, n, color, grid );
+    if( !_d3d->CreateBufferFromMeshData( grid, &_gridVertexBuffer, &_gridIndexBuffer ) )
+    {
+        // LogError<< ""
+    }
 }
 
 void CTestApp::_initModules()

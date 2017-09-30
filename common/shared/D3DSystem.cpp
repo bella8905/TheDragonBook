@@ -31,7 +31,9 @@
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3dcompiler.lib")
 
-
+// force to use real graphic card on Optimus system
+// https://stackoverflow.com/questions/10535950/forcing-nvidia-gpu-programmatically-in-optimus-laptops
+extern "C" {   _declspec( dllexport ) DWORD NvOptimusEnablement = 0x00000001; }
 
 
 void CD3D::VIDEOCARD_INFO::PrintInfo()
