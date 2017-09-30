@@ -642,54 +642,54 @@ void CD3D::EndScene()
 
 bool CD3D::CreateBufferFromMeshData( const SMesh& t_mesh, ID3D11Buffer** t_vertexBufferOut, ID3D11Buffer** t_indexBufferOut = nullptr )
 {
-	if( t_vertexBufferOut == nullptr ) return false;
+    if( t_vertexBufferOut == nullptr ) return false;
 
-	// vertex buffer
-	D3D11_BUFFER_DESC vertexBufferDesc;
-	vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-	vertexBufferDesc.ByteWidth = sizeof( SVertex ) * t_mesh._vertices.size();
-	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vertexBufferDesc.CPUAccessFlags = 0;
-	vertexBufferDesc.MiscFlags = 0;
-	vertexBufferDesc.StructureByteStride = 0;
+    // vertex buffer
+    D3D11_BUFFER_DESC vertexBufferDesc;
+    vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+    vertexBufferDesc.ByteWidth = sizeof( SVertex ) * t_mesh._vertices.size();
+    vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+    vertexBufferDesc.CPUAccessFlags = 0;
+    vertexBufferDesc.MiscFlags = 0;
+    vertexBufferDesc.StructureByteStride = 0;
 
-	// Give the subresource structure a pointer to the vertex data.
-	D3D11_SUBRESOURCE_DATA vertexData;
-	vertexData.pSysMem = &t_mesh._vertices[0];
-	vertexData.SysMemPitch = 0;
-	vertexData.SysMemSlicePitch = 0;
+    // Give the subresource structure a pointer to the vertex data.
+    D3D11_SUBRESOURCE_DATA vertexData;
+    vertexData.pSysMem = &t_mesh._vertices[0];
+    vertexData.SysMemPitch = 0;
+    vertexData.SysMemSlicePitch = 0;
 
-	// Now create the vertex buffer.
-	HRESULT result = _device->CreateBuffer( &vertexBufferDesc, &vertexData, t_vertexBufferOut );
-	if( FAILED( result ) )
-	{
-		return false;
-	}
+    // Now create the vertex buffer.
+    HRESULT result = _device->CreateBuffer( &vertexBufferDesc, &vertexData, t_vertexBufferOut );
+    if( FAILED( result ) )
+    {
+        return false;
+    }
 
-	// index buffer
-	if( t_indexBufferOut != nullptr )
-	{
-		D3D11_BUFFER_DESC indexBufferDesc;
-		indexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-		indexBufferDesc.ByteWidth = sizeof( uint ) * t_mesh._indices.size();
-		indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-		indexBufferDesc.CPUAccessFlags = 0;
-		indexBufferDesc.MiscFlags = 0;
-		indexBufferDesc.StructureByteStride = 0;
+    // index buffer
+    if( t_indexBufferOut != nullptr )
+    {
+        D3D11_BUFFER_DESC indexBufferDesc;
+        indexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+        indexBufferDesc.ByteWidth = sizeof( uint ) * t_mesh._indices.size();
+        indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+        indexBufferDesc.CPUAccessFlags = 0;
+        indexBufferDesc.MiscFlags = 0;
+        indexBufferDesc.StructureByteStride = 0;
 
-		// Give the subresource structure a pointer to the index data.
-		D3D11_SUBRESOURCE_DATA indexData;
-		indexData.pSysMem = &t_mesh._indices[0];
-		indexData.SysMemPitch = 0;
-		indexData.SysMemSlicePitch = 0;
+        // Give the subresource structure a pointer to the index data.
+        D3D11_SUBRESOURCE_DATA indexData;
+        indexData.pSysMem = &t_mesh._indices[0];
+        indexData.SysMemPitch = 0;
+        indexData.SysMemSlicePitch = 0;
 
-		// Create the index buffer.
-		result = _device->CreateBuffer( &indexBufferDesc, &indexData, t_indexBufferOut );
-		if( FAILED( result ) )
-		{
-			return false;
-		}
-	}
+        // Create the index buffer.
+        result = _device->CreateBuffer( &indexBufferDesc, &indexData, t_indexBufferOut );
+        if( FAILED( result ) )
+        {
+            return false;
+        }
+    }
 
-	return true;
+    return true;
 }

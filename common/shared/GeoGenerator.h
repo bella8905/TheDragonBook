@@ -32,8 +32,8 @@ struct SVertex
 
 struct SMesh
 {
-	std::vector<SVertex> _vertices;
-	std::vector<uint>    _indices;
+    std::vector<SVertex> _vertices;
+    std::vector<uint>    _indices;
 };
 
 class CGeoGenerator
@@ -46,6 +46,6 @@ public:
     void BuildUnitCube( SMesh& t_meshOut );
     void BuildUnitSphere( SMesh& t_meshOut );
 
-	// build a grid with m x n vertices
+    // build a grid with m x n vertices
     void BuildGrid( float t_width, float t_depth, uint t_m, uint t_n, glm::vec4 t_color, SMesh& t_meshOut );
 };
