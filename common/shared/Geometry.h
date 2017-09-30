@@ -3,6 +3,7 @@
 #include <d3d11.h>
 #include <vector>
 #include "glm/glm.hpp"
+#include "GeoGenerator.h"
 
 #include "Utl_Global.h"
 

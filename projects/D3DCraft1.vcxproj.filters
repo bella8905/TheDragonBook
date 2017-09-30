@@ -63,9 +63,6 @@
     <ClCompile Include="..\common\shared\FPS.cpp">
       <Filter>shared</Filter>
     </ClCompile>
-    <ClCompile Include="..\common\shared\MeshGen.cpp">
-      <Filter>shared</Filter>
-    </ClCompile>
     <ClCompile Include="..\common\shared\GeoGenerator.cpp">
       <Filter>shared</Filter>
     </ClCompile>
@@ -129,9 +126,6 @@
       <Filter>shared</Filter>
     </ClInclude>
     <ClInclude Include="..\common\shared\FPS.h">
-      <Filter>shared</Filter>
-    </ClInclude>
-    <ClInclude Include="..\common\shared\MeshGen.h">
       <Filter>shared</Filter>
     </ClInclude>
     <ClInclude Include="..\common\shared\GeoGenerator.h">

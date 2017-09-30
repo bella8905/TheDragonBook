@@ -1,3 +1,5 @@
+#pragma once
+
 #include <vector>
 #include "glm/glm.hpp"
 #include "Utl_Global.h"
@@ -11,16 +13,12 @@ struct SVertex
     glm::vec2 _texCoord0;
     glm::vec2 _texCoord1;
 
-    SVertex() : _position( 0.f ), _normal( 0.f, 0.f, -1.f ), _tangent( 1.f, 0.f, 0.f ),
-        _color( 1.f, 0.f, 0.f, 1.f ), _texCoord0( 0.f, 0.f ), _texCoord1( 0.f, 0.f )
-    {
-
-    }
-
     //////////////////////////////////////////////////////////////////////////
     // constructors
     //////////////////////////////////////////////////////////////////////////
-
+    
+    // default 
+    SVertex() {}
     // prelit vertex
     SVertex( glm::vec3 t_pos, glm::vec4 t_color );
     SVertex( glm::vec3 t_pos, glm::vec2 t_texCoord0, glm::vec2 t_texCoord1 = { 0.f, 0.f }  );

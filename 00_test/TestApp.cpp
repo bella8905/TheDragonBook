@@ -55,7 +55,7 @@ void CTestApp::SCENE::Update()
 
 void CTestApp::SCENE::Draw()
 {
-    for( uint i = 0, numOfObj = _objects.size(); i < numOfObj; ++i )
+    for( uint i = 0, numOfObj = (uint)_objects.size(); i < numOfObj; ++i )
     {
         Shaders_BindShader( &_objects[i] );
         _objects[i].Draw();
@@ -74,7 +74,8 @@ void CTestApp::_initScene()
 	float gridDepth = 20;
 	uint m = 10;
 	uint n = 10;
-	geoGen.BuildGrid( gridWidth, gridDepth, m, n, grid );
+    glm::vec4 color( 1.f );
+	geoGen.BuildGrid( gridWidth, gridDepth, m, n, color, grid );
 	if( !_d3d->CreateBufferFromMeshData( grid, &_gridVertexBuffer, &_gridIndexBuffer ) )
 	{
 		// LogError<< ""

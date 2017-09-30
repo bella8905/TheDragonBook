@@ -50,7 +50,7 @@ void CGeo::_generateBufferFromData( const std::vector<SVertex>& t_vertices, cons
     ID3D11Buffer* vertexBuffer;
     D3D11_BUFFER_DESC vertexBufferDesc;
     vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-    vertexBufferDesc.ByteWidth = sizeof( SVertex ) * t_vertices.size();
+    vertexBufferDesc.ByteWidth = (UINT)( sizeof( SVertex ) * t_vertices.size() );
     vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     vertexBufferDesc.CPUAccessFlags = 0;
     vertexBufferDesc.MiscFlags = 0;
@@ -76,7 +76,7 @@ void CGeo::_generateBufferFromData( const std::vector<SVertex>& t_vertices, cons
     // Set up the description of the static index buffer.
     D3D11_BUFFER_DESC indexBufferDesc;
     indexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-    indexBufferDesc.ByteWidth = sizeof( uint ) * t_indices.size();
+    indexBufferDesc.ByteWidth = (UINT)( sizeof( uint ) * t_indices.size() );
     indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
     indexBufferDesc.CPUAccessFlags = 0;
     indexBufferDesc.MiscFlags = 0;
@@ -96,7 +96,7 @@ void CGeo::_generateBufferFromData( const std::vector<SVertex>& t_vertices, cons
     }
 
     _vsInput._indexBuffer = indexBuffer;
-    _vsInput._numOfIndices = t_indices.size();
+    _vsInput._numOfIndices = (uint)t_indices.size();
 
 }
 
@@ -127,7 +127,7 @@ void CTriangelGeo::_generateBuffer()
     uint numberOfVertices = array_size_of( positions );
     for( uint i = 0; i < numberOfVertices; ++i )
     {
-        SVertex vertex( positions[i], normal, color );
+        SVertex vertex( positions[i], color );
         vertices.push_back( vertex );
         indices.push_back( i );
     }
@@ -187,7 +187,6 @@ void CBoxGeo::_generateBuffer()
         int startIndex = 3 * i;
         int colorIdx = startIndex / 12;
         vertices.push_back( SVertex( glm::vec3( cubeVertices[startIndex], cubeVertices[startIndex + 1], cubeVertices[startIndex + 2] ),
-                            glm::vec3( cubeNormals[startIndex], cubeNormals[startIndex + 1], cubeNormals[startIndex + 2] ),
                             colors[colorIdx] ) );
     }
 

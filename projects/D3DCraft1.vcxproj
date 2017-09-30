@@ -33,7 +33,6 @@
     <ClCompile Include="..\common\shared\Geometry.cpp" />
     <ClCompile Include="..\common\shared\Graphics.cpp" />
     <ClCompile Include="..\common\shared\Input.cpp" />
-    <ClCompile Include="..\common\shared\MeshGen.cpp" />
     <ClCompile Include="..\common\shared\Object.cpp" />
     <ClCompile Include="..\common\shared\Shader.cpp" />
     <ClCompile Include="..\common\shared\System.cpp" />
@@ -57,7 +56,6 @@
     <ClInclude Include="..\common\shared\Geometry.h" />
     <ClInclude Include="..\common\shared\Graphics.h" />
     <ClInclude Include="..\common\shared\Input.h" />
-    <ClInclude Include="..\common\shared\MeshGen.h" />
     <ClInclude Include="..\common\shared\Object.h" />
     <ClInclude Include="..\common\shared\Shader.h" />
     <ClInclude Include="..\common\shared\System.h" />

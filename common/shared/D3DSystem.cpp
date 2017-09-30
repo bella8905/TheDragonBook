@@ -640,14 +640,14 @@ void CD3D::EndScene()
     return;
 }
 
-bool CD3D::CreateBufferFromMeshData( const SMesh& t_mesh, ID3D11Buffer** t_vertexBufferOut, ID3D11Buffer** t_indexBufferOut = nullptr )
+bool CD3D::CreateBufferFromMeshData( const SMesh& t_mesh, ID3D11Buffer** t_vertexBufferOut, ID3D11Buffer** t_indexBufferOut /*= nullptr*/ )
 {
     if( t_vertexBufferOut == nullptr ) return false;
 
     // vertex buffer
     D3D11_BUFFER_DESC vertexBufferDesc;
     vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-    vertexBufferDesc.ByteWidth = sizeof( SVertex ) * t_mesh._vertices.size();
+    vertexBufferDesc.ByteWidth = (UINT)( sizeof( SVertex ) * t_mesh._vertices.size() );
     vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     vertexBufferDesc.CPUAccessFlags = 0;
     vertexBufferDesc.MiscFlags = 0;
@@ -671,7 +671,7 @@ bool CD3D::CreateBufferFromMeshData( const SMesh& t_mesh, ID3D11Buffer** t_verte
     {
         D3D11_BUFFER_DESC indexBufferDesc;
         indexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-        indexBufferDesc.ByteWidth = sizeof( uint ) * t_mesh._indices.size();
+        indexBufferDesc.ByteWidth = (UINT)( sizeof( uint ) * t_mesh._indices.size() );
         indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
         indexBufferDesc.CPUAccessFlags = 0;
         indexBufferDesc.MiscFlags = 0;
