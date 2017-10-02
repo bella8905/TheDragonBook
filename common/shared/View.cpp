@@ -5,11 +5,9 @@
 #include "Graphics.h"
 #include "System.h"
 
-
 static struct
 {
     CView _view;
-
 }View;
 
 void View_SetAsActive( CView* t_view )
@@ -30,7 +28,6 @@ CView* View_GetActive()
     return &View._view;
 }
 
-
 void CView::initDefaults()
 {
     // mark all things as dirty at start
@@ -38,13 +35,13 @@ void CView::initDefaults()
 
     _bPerspective = true;
 
-    // view 
+    // view
     // glm::vec4 camPos( 0.15f, -0.63f, 1.89f, 1.f );
     glm::vec4 camPos( 0.f, 2.f, 2.f, 1.f );
     // glm::vec4 camFace( 0.f, 0.f, -1.f, 0.f );
-    glm::vec4 camFace = -ToDirection( glm::normalize( glm::vec3( camPos ) ) );
+    glm::vec4 camForward = ToDirection( glm::normalize( glm::vec3( camPos ) ) );
     glm::vec4 camUp( 0.f, 1.f, 0.f, 0.f );
-    SetCameraPostionFaceAndUp( camPos, camFace, camUp );
+    SetCameraPostionForwardAndUp( camPos, camForward, camUp );
 
     // horizontal filed of view
     float horizontalFOV = 80;
@@ -95,8 +92,6 @@ void CView::updateView2WorldMatrix()
     }
 }
 
-
-
 void CView::updateView2ProjMatrix()
 {
     if( ( _dirtyFlags & _DIRTY_FLAG_VIEW_TO_PROJ_MATRIX ) != 0 )
@@ -121,7 +116,6 @@ void CView::updateView2ProjMatrix()
 
             _dirtyFlags &= ~_DIRTY_FLAG_VIEW_TO_PROJ_MATRIX;
             _dirtyFlags &= ~_DIRTY_FLAG_PROJ_TO_VIEW_MATRIX;
-
         }
     }
 }
@@ -150,11 +144,9 @@ void CView::updateProj2ViewMatrix()
 
             _dirtyFlags &= ~_DIRTY_FLAG_VIEW_TO_PROJ_MATRIX;
             _dirtyFlags &= ~_DIRTY_FLAG_PROJ_TO_VIEW_MATRIX;
-
         }
     }
 }
-
 
 float CView::getHorizontalPerspective( const glm::mat4& t_view2Proj )
 {
@@ -166,6 +158,11 @@ float CView::getVerticalPerspective( const glm::mat4& t_view2Proj )
     return t_view2Proj[1][1];
 }
 
+//////////////////////////////////////////////////////////////////////////
+//
+//
+//
+//////////////////////////////////////////////////////////////////////////
 void CView::computePerspectiveViewProjMatrices( glm::mat4& t_view2Proj, glm::mat4& t_proj2View )
 {
     float perspHorizontal = getHorizontalPerspective( _view2ProjMatrix );
@@ -176,31 +173,23 @@ void CView::computePerspectiveViewProjMatrices( glm::mat4& t_view2Proj, glm::mat
     float sx = perspHorizontal;
     float sy = perspVertical;
 
-    float sz = clipFar / ( clipFar - clipNear );
+    float sz = -clipFar / ( clipFar - clipNear );
     float pz = -( clipFar * clipNear ) / ( clipFar - clipNear );
     t_view2Proj = glm::mat4( glm::vec4( sx, 0.f, 0.f, 0.f ),
                              glm::vec4( 0.f, sy, 0.f, 0.f ),
-                             glm::vec4( 0.f, 0.f, sz, 1.f ),
+                             glm::vec4( 0.f, 0.f, sz, -1.f ),
                              glm::vec4( 0.f, 0.f, pz, 0.f )
-                             );
+    );
 
     getInverseOfView2Proj( _view2ProjMatrix, t_proj2View );
-
 }
 
 void CView::computeOrthographicViewProjMatrices( glm::mat4& t_view2Proj, glm::mat4& t_proj2View )
 {
-
 }
 
 void CView::getInverseOfProj2View( const glm::mat4& t_proj2View, glm::mat4& t_view2Proj )
 {
-    // proj to view matrix
-    //	a	0	0	0 
-    //	0	b	0	0
-    //	0	0	0	-1
-    //	0	0	c	d
-
     float a = t_proj2View[0][0];
     float b = t_proj2View[1][1];
     float c = t_proj2View[2][3];
@@ -209,25 +198,11 @@ void CView::getInverseOfProj2View( const glm::mat4& t_proj2View, glm::mat4& t_vi
                              glm::vec4( 0.f, 1.f / b, 0.f, 0.f ),
                              glm::vec4( 0.f, 0.f, d / c, -1.f ),
                              glm::vec4( 0.f, 0.f, 1.f / c, 0.f )
-                             );
-
+    );
 }
 
 void CView::getInverseOfView2Proj( const glm::mat4& t_view2Proj, glm::mat4& t_proj2View )
 {
-    // Opengl
-    // view to proj matrix
-    //	sx	0	0	0 
-    //	0	sy	0	0
-    //	0	0	sz	pz
-    //	0	0	-1	0
-
-    // D3D
-    //	sx	0	0	0 
-    //	0	sy	0	0
-    //	0	0	sz	pz
-    //	0	0	1	0
-
     float sx = t_view2Proj[0][0];
     float sy = t_view2Proj[1][1];
     float sz = t_view2Proj[2][2];
@@ -237,9 +212,8 @@ void CView::getInverseOfView2Proj( const glm::mat4& t_view2Proj, glm::mat4& t_pr
                              glm::vec4( 0.f, 1.f / sy, 0.f, 0.f ),
                              glm::vec4( 0.f, 0.f, 0.f, 1.f / pz ),
                              glm::vec4( 0.f, 0.f, 1.f, -sz / pz )
-                             );
+    );
 }
-
 
 void CView::updateWorld2ProjMatrix()
 {
@@ -270,7 +244,6 @@ const glm::mat4& CView::GetView2WorldMatrix()
     return _view2WorldMatrix;
 }
 
-
 const glm::mat4& CView::GetView2ProjMatrix()
 {
     if( ( _dirtyFlags & _DIRTY_FLAG_VIEW_TO_PROJ_MATRIX ) != 0 )
@@ -280,7 +253,6 @@ const glm::mat4& CView::GetView2ProjMatrix()
 
     return _view2ProjMatrix;
 }
-
 
 const glm::mat4& CView::GetProj2ViewMatrix()
 {
@@ -292,7 +264,6 @@ const glm::mat4& CView::GetProj2ViewMatrix()
     return _proj2ViewMatrix;
 }
 
-
 const glm::mat4& CView::GetWorld2ProjMatrix()
 {
     if( ( _dirtyFlags & _DIRTY_FLAG_WORLD_TO_PROJ_MATRIX ) != 0 )
@@ -303,12 +274,10 @@ const glm::mat4& CView::GetWorld2ProjMatrix()
     return _world2ProjMatrix;
 }
 
-
 void CView::updateViewPort()
 {
     if( ( _dirtyFlags & _DIRTY_FLAG_VIEW_PORT ) != 0 )
     {
-
         _dirtyFlags &= ~_DIRTY_FLAG_VIEW_PORT;
     }
 }
@@ -323,22 +292,19 @@ SViewPort* CView::GetViewPort()
     return &_viewPort;
 }
 
-
-
-void CView::SetCameraPostionFaceAndUp( glm::vec4 t_pos, glm::vec4 t_facing, glm::vec4 t_up )
+void CView::SetCameraPostionForwardAndUp( glm::vec4 t_pos, glm::vec4 t_forward, glm::vec4 t_up )
 {
     assert( IsPosition( t_pos ) );
-    assert( IsDirection( t_facing ) );
+    assert( IsDirection( t_forward ) );
     assert( IsDirection( t_up ) );
 
     glm::vec3 pos = ToVec3( t_pos );
-    glm::vec3 face = ToVec3( t_facing );
+    glm::vec3 forward = ToVec3( t_forward );
     glm::vec3 up = ToVec3( t_up );
 
-    glm::vec3 z = face;
+    glm::vec3 z = forward;
     glm::vec3 x = glm::normalize( glm::cross( up, z ) );
     glm::vec3 y = glm::normalize( glm::cross( z, x ) );
-
 
     // 	// inverse of a translation matrix
     // 	// T(v)^-1 = T(-v)
@@ -346,7 +312,7 @@ void CView::SetCameraPostionFaceAndUp( glm::vec4 t_pos, glm::vec4 t_facing, glm:
     // 			glm::vec4( 0.f, 1.f, 0.f, 0.f ),
     // 			glm::vec4( 0.f, 0.f, 1.f, 0.f ),
     // 			glm::vec4( -pos, 1.f ) );
-    // 
+    //
     // 	// inverse of a rotation matrix
     // 	// for orthonormalized matrix,
     // 	// R(v)^-1 = transpose( R(v) )
@@ -354,8 +320,8 @@ void CView::SetCameraPostionFaceAndUp( glm::vec4 t_pos, glm::vec4 t_facing, glm:
     // 			glm::vec4( x.y, y.y, z.y, 0.f ),
     // 			glm::vec4( x.z, y.z, z.z, 0.f ),
     // 			glm::vec4( 0.f, 0.f, 0.f, 1.f ) );
-    // 
-    // 	
+    //
+    //
     // 	_world2ViewMatrix = r * t;
 
     _view2WorldMatrix = glm::mat4(
@@ -363,14 +329,12 @@ void CView::SetCameraPostionFaceAndUp( glm::vec4 t_pos, glm::vec4 t_facing, glm:
         ToDirection( y ),
         ToDirection( z ),
         t_pos
-        );
-
+    );
 
     // dirty flags
     _dirtyFlags |= _DIRTY_FLAG_WORLD_TO_VIEW_MATRIX | _DIRTY_FLAG_WORLD_TO_PROJ_MATRIX;
     _dirtyFlags &= ~_DIRTY_FLAG_VIEW_TO_WORLD_MATRIX;
 }
-
 
 void CView::SetHorizontalFieldOfView( float t_radAngle )
 {
@@ -379,7 +343,6 @@ void CView::SetHorizontalFieldOfView( float t_radAngle )
     float perspecive = 1.f / tan( t_radAngle * 0.5f );
     SetHorizontalPerspective( perspecive );
 }
-
 
 void CView::SetHorizontalPerspective( float t_perspective )
 {
@@ -403,8 +366,6 @@ void CView::SetHorizontalPerspective( float t_perspective )
     _dirtyFlags |= _DIRTY_FLAG_VIEW_TO_PROJ_MATRIX | _DIRTY_FLAG_PROJ_TO_VIEW_MATRIX | _DIRTY_FLAG_WORLD_TO_PROJ_MATRIX;
 }
 
-
-
 void CView::SetAspectRatio( float t_aspect )
 {
     float oldAspect = _view2ProjMatrix[1][1] / _view2ProjMatrix[0][0];
@@ -418,7 +379,6 @@ void CView::SetAspectRatio( float t_aspect )
 
     // dirty flags
     _dirtyFlags |= _DIRTY_FLAG_VIEW_TO_PROJ_MATRIX | _DIRTY_FLAG_PROJ_TO_VIEW_MATRIX | _DIRTY_FLAG_WORLD_TO_PROJ_MATRIX;
-
 }
 
 void CView::SetViewport( const SViewPort& t_viewport )
@@ -429,14 +389,13 @@ void CView::SetViewport( const SViewPort& t_viewport )
     SetAspectRatio( ( float )viewport->_width / ( float )viewport->_height );
 }
 
-
 void CView::GetCameraPosition( glm::vec4& t_pos )
 {
     glm::mat4 view2world = GetView2WorldMatrix();
     t_pos = view2world[3];
 }
 
-void CView::GetCameraPositionFaceUpAndRight( glm::vec4& t_pos, glm::vec4& t_face, glm::vec4& t_up, glm::vec4& t_right )
+void CView::GetCameraPositionForwardUpAndRight( glm::vec4& t_pos, glm::vec4& t_forward, glm::vec4& t_up, glm::vec4& t_right )
 {
     glm::mat4 view2world = GetView2WorldMatrix();
     // tx, ty, tz
@@ -446,5 +405,5 @@ void CView::GetCameraPositionFaceUpAndRight( glm::vec4& t_pos, glm::vec4& t_face
     // r10, r11, r12
     t_up = view2world[1];
     // r20, r21, r22
-    t_face = -view2world[2];
+    t_forward = view2world[2];
 }

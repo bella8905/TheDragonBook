@@ -10,7 +10,7 @@ class CCamera;
 class CTestApp : public CGraphics
 {
 public:
-	CTestApp() : _gridVertexBuffer( nullptr ), _gridIndexBuffer( nullptr ) {}
+    CTestApp() : _gridVertexBuffer( nullptr ), _gridIndexBuffer( nullptr ), _numOfIndices( 0 ) {}
 
 private:
     struct SCENE
@@ -20,26 +20,29 @@ private:
 
         SCENE() : _pFreeflyCam( nullptr )
         {
-
         }
 
         void Init();
         void Deinit();
         void Update();
         void Draw();
-
     } _scene;
 
-	ID3D11Buffer* _gridVertexBuffer;
-	ID3D11Buffer* _gridIndexBuffer;
+    // grid
+    ID3D11Buffer* _gridVertexBuffer;
+    ID3D11Buffer* _gridIndexBuffer;
+    uint          _numOfIndices;
 
 private:
     virtual void _initModules();
     virtual void _deinitModules();
     virtual void _initScene();
 
+    void _initGrid();
+    void _deinitGrid();
+    void _drawGrid();
+
 protected:
     virtual void _update();
     virtual bool _render();
 };
-

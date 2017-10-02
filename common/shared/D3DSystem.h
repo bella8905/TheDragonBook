@@ -6,7 +6,6 @@
 
 struct SMesh;
 
-
 /////////////////////////////////////////////////////////////////
 // Convenience macro for releasing COM objects.
 /////////////////////////////////////////////////////////////////
@@ -14,12 +13,17 @@ struct SMesh;
 
 struct SViewPort;
 
+enum RasterizerState
+{
+    FILLED,
+    WIREFRAME,
+};
+
 class CD3D
 {
 public:
     CD3D();
     ~CD3D();
-
 
 public:
     virtual bool Initialize( HWND t_hwnd );
@@ -45,11 +49,11 @@ private:
         int         _dedicatedSystemMemory;
         int         _sharedSystemMemory;
         std::string _videoCardDescription;
-//         struct
-//         {
-//             UINT _numerator;
-//             UINT _denominator;
-//         }_refreshRate;
+        //         struct
+        //         {
+        //             UINT _numerator;
+        //             UINT _denominator;
+        //         }_refreshRate;
 
         void PrintInfo();
     } _videoCardInfo;
@@ -62,9 +66,14 @@ private:
     ID3D11Texture2D*         _depthStencilBuffer;
     ID3D11DepthStencilState* _depthStencilState;
     ID3D11DepthStencilView*  _depthStencilView;
-    ID3D11RasterizerState*   _rasterizerState;
+
+    ID3D11RasterizerState*   _rsFilled;
+    ID3D11RasterizerState*   _rsWireframe;
 
 private:
+    bool _createPresetRS();
+    void _destroyPresetRS();
+
     // initiaize stages
     bool _updateVideoCardInfo();
     bool _createDevice();
@@ -77,5 +86,10 @@ private:
     void _setDefaultViewport();
 
 public:
-	bool CreateBufferFromMeshData( const SMesh& t_mesh, ID3D11Buffer** t_vertexBufferOut, ID3D11Buffer** t_indexBufferOut = nullptr );
+    bool CreateBufferFromMeshData( const SMesh& t_mesh, ID3D11Buffer** t_vertexBufferOut, ID3D11Buffer** t_indexBufferOut = nullptr );
+    void SetRS( RasterizerState t_rs );
+
+    // draw
+    void Draw( ID3D11Buffer*& t_vertexBuffer, UINT t_numOfVertices, UINT t_vertexOffset = 0 );
+    void DrawIndexed( ID3D11Buffer*& t_vertexBuffer, ID3D11Buffer*& t_indexBuffer, UINT t_numOfIndices, UINT t_vertexOffset = 0, UINT t_indexOffset = 0 );
 };

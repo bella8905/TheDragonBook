@@ -5,8 +5,6 @@
 #include "D3DSystem.h"
 #include "Geometry.h"
 
-
-
 void CGeo::Init( ID3D11Device* t_device, ID3D11DeviceContext* t_deviceContext )
 {
     _device = t_device;
@@ -14,7 +12,6 @@ void CGeo::Init( ID3D11Device* t_device, ID3D11DeviceContext* t_deviceContext )
 
     _generateBuffer();
 }
-
 
 void CGeo::Deinit()
 {
@@ -25,7 +22,6 @@ void CGeo::Draw()
 {
     uint stride;
     uint offset;
-
 
     // Set vertex buffer stride and offset.
     stride = sizeof( SVertex );
@@ -40,7 +36,7 @@ void CGeo::Draw()
     // Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
     _deviceContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
 
-    // issue draw call 
+    // issue draw call
     _deviceContext->DrawIndexed( _vsInput._numOfIndices, 0, 0 );
 }
 
@@ -50,7 +46,7 @@ void CGeo::_generateBufferFromData( const std::vector<SVertex>& t_vertices, cons
     ID3D11Buffer* vertexBuffer;
     D3D11_BUFFER_DESC vertexBufferDesc;
     vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-    vertexBufferDesc.ByteWidth = (UINT)( sizeof( SVertex ) * t_vertices.size() );
+    vertexBufferDesc.ByteWidth = ( UINT )( sizeof( SVertex ) * t_vertices.size() );
     vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     vertexBufferDesc.CPUAccessFlags = 0;
     vertexBufferDesc.MiscFlags = 0;
@@ -71,12 +67,11 @@ void CGeo::_generateBufferFromData( const std::vector<SVertex>& t_vertices, cons
 
     _vsInput._vertexBuffer = vertexBuffer;
 
-
     ID3D11Buffer* indexBuffer;
     // Set up the description of the static index buffer.
     D3D11_BUFFER_DESC indexBufferDesc;
     indexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-    indexBufferDesc.ByteWidth = (UINT)( sizeof( uint ) * t_indices.size() );
+    indexBufferDesc.ByteWidth = ( UINT )( sizeof( uint ) * t_indices.size() );
     indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
     indexBufferDesc.CPUAccessFlags = 0;
     indexBufferDesc.MiscFlags = 0;
@@ -96,18 +91,14 @@ void CGeo::_generateBufferFromData( const std::vector<SVertex>& t_vertices, cons
     }
 
     _vsInput._indexBuffer = indexBuffer;
-    _vsInput._numOfIndices = (uint)t_indices.size();
-
+    _vsInput._numOfIndices = ( uint )t_indices.size();
 }
-
 
 void CGeo::_clearBuffer()
 {
     ReleaseCOM( _vsInput._indexBuffer );
     ReleaseCOM( _vsInput._indexBuffer );
 }
-
-
 
 void CTriangelGeo::_generateBuffer()
 {
@@ -135,7 +126,6 @@ void CTriangelGeo::_generateBuffer()
     _generateBufferFromData( vertices, indices );
 }
 
-
 void CBoxGeo::_generateBuffer()
 {
     // cube ///////////////////////////////////////////////////////////////////////
@@ -151,24 +141,22 @@ void CBoxGeo::_generateBuffer()
     std::vector<uint> indices;
 
     float cubeVertices[] = {
-        0.5 , 0.5, -0.5, -0.5, 0.5 , -0.5, -0.5, -0.5, -0.5, 0.5 , -0.5, -0.5,         // v0-v1-v2-v3
-        0.5 , 0.5, -0.5, 0.5 , -0.5, -0.5, 0.5 , -0.5, 0.5 , 0.5 , 0.5 , 0.5 ,         // v0-v3-v4-v5
-        0.5 , 0.5, -0.5, 0.5 , 0.5 , 0.5 , -0.5, 0.5 , 0.5 , -0.5, 0.5 , -0.5,         // v0-v5-v6-v1
-        -0.5, 0.5, -0.5, -0.5, 0.5 , 0.5 , -0.5, -0.5, 0.5 , -0.5, -0.5, -0.5,		   // v1-v6-v7-v2
-        -0.5, -0.5, 0.5, 0.5 , -0.5, 0.5 , 0.5 , -0.5, -0.5, -0.5, -0.5, -0.5,		   // v7-v4-v3-v2
-        0.5 , -0.5, 0.5, -0.5, -0.5, 0.5 , -0.5, 0.5 , 0.5 , 0.5 , 0.5 , 0.5           // v4-v7-v6-v5
+        0.5 , 0.5, 0.5, -0.5, 0.5 , 0.5, -0.5, -0.5, 0.5, 0.5 , -0.5, 0.5,         // v0-v1-v2-v3
+        0.5 , 0.5, 0.5, 0.5 , -0.5, 0.5, 0.5 , -0.5, -0.5 , 0.5 , 0.5 , -0.5 ,         // v0-v3-v4-v5
+        0.5 , 0.5, 0.5, 0.5 , 0.5 , -0.5 , -0.5, 0.5 , -0.5 , -0.5, 0.5 , 0.5,         // v0-v5-v6-v1
+        -0.5, 0.5, 0.5, -0.5, 0.5 , -0.5 , -0.5, -0.5, -0.5 , -0.5, -0.5, 0.5,		   // v1-v6-v7-v2
+        -0.5, -0.5, -0.5, 0.5 , -0.5, -0.5 , 0.5 , -0.5, 0.5, -0.5, -0.5, 0.5,		   // v7-v4-v3-v2
+        0.5 , -0.5, -0.5, -0.5, -0.5, -0.5 , -0.5, 0.5 , -0.5 , 0.5 , 0.5 , -0.5           // v4-v7-v6-v5
     };
 
     float cubeNormals[] = {
-        0 , 0 , -1, 0 , 0 , -1, 0 , 0 , -1, 0 , 0 , -1,             // v0-v1-v2-v3
+        0 , 0 , 1, 0 , 0 , 1, 0 , 0 , 1, 0 , 0 , 1,             // v0-v1-v2-v3
         1 , 0 , 0 , 1 , 0 , 0 , 1 , 0 , 0 , 1 , 0 , 0 ,             // v0-v3-v4-v5
         0 , 1 , 0 , 0 , 1 , 0 , 0 , 1 , 0 , 0 , 1 , 0 ,             // v0-v5-v6-v1
         -1, 0 , 0 , -1, 0 , 0 , -1, 0 , 0 , -1, 0 , 0 ,             // v1-v6-v7-v2
         0 , -1, 0 , 0 , -1, 0 , 0 , -1, 0 , 0 , -1, 0 ,             // v7-v4-v3-v2
-        0 , 0 , 1 , 0 , 0 , 1 , 0 , 0 , 1 , 0 , 0 , 1               // v4-v7-v6-v5
+        0 , 0 , -1 , 0 , 0 , -1 , 0 , 0 , -1 , 0 , 0 , -1               // v4-v7-v6-v5
     };
-
-
 
     glm::vec4 colors[] = {
         { 1.f, 0.f, 0.f, 1.f },
@@ -177,9 +165,7 @@ void CBoxGeo::_generateBuffer()
         { 1.f, 1.f, 0.f, 1.f },
         { 1.f, 0.f, 1.f, 1.f },
         { 0.f, 1.f, 1.f, 1.f },
-
     };
-
 
     uint numOfVertices = sizeof( cubeVertices ) / sizeof( float ) / 3;
     for( uint i = 0; i < numOfVertices; ++i )
@@ -207,13 +193,10 @@ void CBoxGeo::_generateBuffer()
     _generateBufferFromData( vertices, indices );
 }
 
-
-
-
 /////////////////////////////////////////////////////////////////
 //
 // Geo Container
-//  
+//
 /////////////////////////////////////////////////////////////////
 CGeoContainer::CGeoContainer() : _inited( false )
 {
@@ -231,7 +214,6 @@ void CGeoContainer::Init( ID3D11Device* t_device, ID3D11DeviceContext* t_deviceC
         return;
     }
 
-
     _geos[GEO_TRIANGLE] = new CTriangelGeo();
     _geos[GEO_BOX] = new CBoxGeo();
 
@@ -241,7 +223,6 @@ void CGeoContainer::Init( ID3D11Device* t_device, ID3D11DeviceContext* t_deviceC
     }
 
     _inited = true;
-
 }
 
 void CGeoContainer::Deinit()

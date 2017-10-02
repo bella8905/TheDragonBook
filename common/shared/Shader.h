@@ -3,7 +3,6 @@
 #include <d3d11.h>
 #include "glm/fwd.hpp"
 
-
 class CObject;
 
 enum SHADER_TYPE
@@ -31,7 +30,6 @@ public:
     void Init( ID3D11Device* t_device, ID3D11DeviceContext* t_deviceContext );
     void Deinit();
 
-
     virtual void Bind( const CObject* t_obj ) = 0;
 
 protected:
@@ -51,11 +49,7 @@ protected:
         return true;
     }
     virtual bool _createFromFile( LPCWCHAR t_filename, LPCSTR t_entryPoint ) = 0;
-
-
 };
-
-
 
 class CVertexShader : public CShader
 {
@@ -80,7 +74,6 @@ protected:
     virtual bool _createIALayout( ID3D10Blob* t_vertexShaderBuffer ) = 0;
 };
 
-
 class CPixelShader : public CShader
 {
 public:
@@ -98,13 +91,7 @@ public:
 protected:
     virtual bool _createFromFile( LPCWCHAR t_filename, LPCSTR t_entryPoint );
     virtual void _onDeint();
-
 };
-
-
-
-
-
 
 // the actual shaders start from here
 
@@ -144,8 +131,7 @@ protected:
     virtual bool _postCreateShader();
 };
 
-
-// simple pixel shader 
+// simple pixel shader
 // a simple pixel shader which passes by colors
 class CSimpleColorPS : public CPixelShader
 {
@@ -160,8 +146,6 @@ public:
 protected:
     virtual void _onInit();
 };
-
-
 
 void Shaders_SetAsActive( SHADER_TYPE t_type, CShader* t_shader );
 void Shaders_BindShader( const CObject* t_obj );

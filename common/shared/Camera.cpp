@@ -1,4 +1,3 @@
-
 #include "glm\glm.hpp"
 #include "glm\gtx\quaternion.hpp"
 
@@ -9,41 +8,34 @@
 
 #include "Camera.h"
 
-
-
-CCamera::CCamera( glm::vec4 t_pos, glm::vec4 t_facing, glm::vec4 t_up ) : _pos( t_pos ), _facing( t_facing ), _up( t_up )
+CCamera::CCamera( glm::vec4 t_pos, glm::vec4 t_forward, glm::vec4 t_up ) : _pos( t_pos ), _forward( t_forward ), _up( t_up )
 {
 }
-
 
 CCamera::~CCamera( void )
 {
 }
 
-
-void CCamera::Setup( const glm::vec4& t_pos, const glm::vec4& t_facing, const glm::vec4& t_up )
+void CCamera::Setup( const glm::vec4& t_pos, const glm::vec4& t_forward, const glm::vec4& t_up )
 {
     _pos = t_pos;
-    _facing = t_facing;
+    _forward = t_forward;
     _up = t_up;
 }
-
 
 void CCamera::SetToView( CView* t_view )
 {
     if( !t_view ) return;
 
-    if( Equals( glm::length( _facing ), 0.f ) )
+    if( Equals( glm::length( _forward ), 0.f ) )
     {
-        _facing = glm::vec4( 0.f, 0.f, 1.f, 0.f );
+        _forward = glm::vec4( 0.f, 0.f, 1.f, 0.f );
     }
 
-    t_view->SetCameraPostionFaceAndUp( _pos, _facing, _up );
+    t_view->SetCameraPostionForwardAndUp( _pos, _forward, _up );
 }
 
-
-
-CFreeFlyCamera::CFreeFlyCamera( glm::vec4 t_pos, glm::vec4 t_aim, glm::vec4 t_up ) : CCamera( t_pos, glm::normalize( t_aim - t_pos ), t_up ), _aim( t_aim )
+CFreeFlyCamera::CFreeFlyCamera( glm::vec4 t_pos, glm::vec4 t_aim, glm::vec4 t_up ) : CCamera( t_pos, glm::normalize( t_pos - t_aim ), t_up ), _aim( t_aim )
 {
     _cameraHehaviors[CAMERA_PAN]._key = CInput::KEY::KEY_MOUSE_MIDDLE;
     _cameraHehaviors[CAMERA_PAN]._speed = 0.3f;
@@ -51,26 +43,24 @@ CFreeFlyCamera::CFreeFlyCamera( glm::vec4 t_pos, glm::vec4 t_aim, glm::vec4 t_up
     _cameraHehaviors[CAMERA_ORBIT]._speed = 100.f;
     _cameraHehaviors[CAMERA_ZOOM]._key = CInput::KEY::KEY_MOUSE_RIGHT;
     _cameraHehaviors[CAMERA_ZOOM]._speed = 1.f;
-
 }
-
 
 void CFreeFlyCamera::UpdateControl( double t_delta )
 {
     /////////////////////////////////////////////////////////////////
     //
     // control buttons
-    // 
+    //
     // middle button dragging, camera pan,
-    //  keep the aiming direction and distance to camera, 
+    //  keep the aiming direction and distance to camera,
     //  but move the camera left/right along camera up and right axis.
     //
-    // left button dragging, camera orbit, 
-    //  keep the aiming point and distance to camera, 
+    // left button dragging, camera orbit,
+    //  keep the aiming point and distance to camera,
     //  but orbit the camera along camera aim/position sphere
     //
     // right button dragging, camera zoom,
-    //  keep the aiming point and the aiming direction, 
+    //  keep the aiming point and the aiming direction,
     //  move camera along camera facing axis.
     //
     /////////////////////////////////////////////////////////////////
@@ -98,7 +88,7 @@ void CFreeFlyCamera::UpdateControl( double t_delta )
             {
                 case CAMERA_PAN:
                 {
-                    glm::vec3 z = glm::normalize( ToVec3( _facing ) );
+                    glm::vec3 z = glm::normalize( ToVec3( _forward ) );
                     glm::vec3 right = glm::normalize( glm::cross( z, glm::vec3( _up ) ) );
                     _pos += ( float )deltaX * ( float )t_delta * _cameraHehaviors[b]._speed * ToDirection( right ) + ( float )deltaY * ( float )t_delta * _cameraHehaviors[b]._speed * _up;
                     _aim += ( float )deltaX * ( float )t_delta * _cameraHehaviors[b]._speed * ToDirection( right ) + ( float )deltaY * ( float )t_delta * _cameraHehaviors[b]._speed * _up;
@@ -110,21 +100,20 @@ void CFreeFlyCamera::UpdateControl( double t_delta )
                     glm::vec3 startSide = glm::vec3( oldRay._Dir );
                     glm::vec3 endSide = glm::vec3( newRay._Dir );
                     glm::vec3 rotAxis = glm::normalize( glm::cross( startSide, endSide ) );
-                    float rotAngle = acos( glm::dot( startSide, endSide ) ) * 2 * ( float )t_delta * _cameraHehaviors[b]._speed;
+                    float rotAngle = -acos( glm::dot( startSide, endSide ) ) * 2 * ( float )t_delta * _cameraHehaviors[b]._speed;
                     glm::quat rotQuat = glm::angleAxis( rotAngle, rotAxis );
                     glm::mat3 rot_quat = glm::toMat3( rotQuat );
-                    _facing = ToDirection( glm::normalize( rot_quat * ToVec3( _facing ) ) );
+                    _forward = ToDirection( glm::normalize( rot_quat * ToVec3( _forward ) ) );
                     _up = ToDirection( glm::normalize( rot_quat * glm::vec3( _up ) ) );
                     float dist = glm::distance( _pos, _aim );
-                    _pos = _aim - dist * _facing;
-
+                    _pos = _aim + dist * _forward;
                 } break;
                 case CAMERA_ZOOM:
                 {
                     float delta = abs( deltaX ) > abs( deltaY ) ? ( float )deltaX : ( float )deltaY;
                     float dist = glm::distance( _pos, _aim );
                     dist = max( dist - delta * _cameraHehaviors[b]._speed * ( float )t_delta, 0.5f );
-                    _pos = _aim - _facing * dist;
+                    _pos = _aim + _forward * dist;
                 } break;
                 default: break;
             }
@@ -132,17 +121,12 @@ void CFreeFlyCamera::UpdateControl( double t_delta )
             _cameraHehaviors[b]._cursorX = x;
             _cameraHehaviors[b]._cursorY = y;
         }
-
-
     }
-
 }
-
 
 void CFreeFlyCamera::Update( double t_delta )
 {
 }
-
 
 SRay CFreeFlyCamera::_getCameraCursorRayFromCursorPos( const double& t_x, const double& t_y )
 {
@@ -161,6 +145,3 @@ SRay CFreeFlyCamera::_getCameraCursorRayFromCursorPos( const double& t_x, const 
 
     return ray_wor;
 }
-
-
-

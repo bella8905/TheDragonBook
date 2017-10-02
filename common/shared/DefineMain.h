@@ -9,7 +9,6 @@ int WINAPI wWinMain( _In_ HINSTANCE hInstance,
                      _In_ LPWSTR    lpCmdLine,
                      _In_ int       nCmdShow )
 {
-
     CSystem* system = new CTestSystem( hInstance );
     if( !system )
     {
@@ -30,9 +29,7 @@ int WINAPI wWinMain( _In_ HINSTANCE hInstance,
     system = 0;
 
     return 0;
-
 }
-
 
 int main()
 {
@@ -48,10 +45,7 @@ int main()
     return 0;
 }
 
-
 */
-
-
 
 #define MAIN_ENTRY( app_name )                                                                                               \
 class C##app_name##System : public CSystem                                                                                   \

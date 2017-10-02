@@ -17,7 +17,6 @@ public:
     void ShutDown();
     bool Frame();
 
-
     // global settings
     static bool GetIsFullScreen();
     static bool GetIsVsyncEnabled();
@@ -34,9 +33,9 @@ protected:
     CD3D* _d3d;
 
 protected:
-    virtual void _initModules() { }
-    virtual void _deinitModules() { }
-    virtual void _initScene() { }
+    virtual void _initModules() {}
+    virtual void _deinitModules() {}
+    virtual void _initScene() {}
 
     virtual void _update() = 0;
     virtual bool _render() = 0;

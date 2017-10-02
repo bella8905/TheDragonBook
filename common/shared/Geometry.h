@@ -7,14 +7,10 @@
 
 #include "Utl_Global.h"
 
-
-
 enum GEO_TYPE
 {
     GEO_TRIANGLE,
     GEO_BOX,
-
-
 
     GEO_COUNTER,
 };
@@ -29,12 +25,10 @@ public:
     {
     }
 
-
 public:
     void Init( ID3D11Device* t_device, ID3D11DeviceContext* t_deviceContext );
     void Deinit();
     void Draw();
-
 
 protected:
     void _clearBuffer();
@@ -55,11 +49,9 @@ protected:
 
         VSINPUT() : _vertexBuffer( nullptr ), _indexBuffer( nullptr ), _numOfIndices( 0 )
         {
-
         }
     }_vsInput;
 };
-
 
 class CTriangelGeo : public CGeo
 {
@@ -74,7 +66,6 @@ protected:
     virtual void _generateBuffer();
 };
 
-
 class CBoxGeo : public CGeo
 {
 public:
@@ -88,9 +79,7 @@ protected:
     virtual void _generateBuffer();
 };
 
-
-
-// a interface to get all possible geos we have 
+// a interface to get all possible geos we have
 class CGeoContainer
 {
 private:
@@ -117,5 +106,4 @@ public:
             _geos[t_type]->Draw();
         }
     }
-
 };

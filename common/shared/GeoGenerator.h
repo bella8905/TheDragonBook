@@ -16,12 +16,12 @@ struct SVertex
     //////////////////////////////////////////////////////////////////////////
     // constructors
     //////////////////////////////////////////////////////////////////////////
-    
-    // default 
+
+    // default
     SVertex() {}
     // prelit vertex
     SVertex( glm::vec3 t_pos, glm::vec4 t_color );
-    SVertex( glm::vec3 t_pos, glm::vec2 t_texCoord0, glm::vec2 t_texCoord1 = { 0.f, 0.f }  );
+    SVertex( glm::vec3 t_pos, glm::vec2 t_texCoord0, glm::vec2 t_texCoord1 = { 0.f, 0.f } );
 
     // lit vertex
     SVertex( glm::vec3 t_pos, glm::vec3 t_normal, glm::vec3 t_tangent, glm::vec4 t_color );
@@ -37,8 +37,8 @@ struct SMesh
 class CGeoGenerator
 {
 public:
-    CGeoGenerator() { }
-    ~CGeoGenerator() { }
+    CGeoGenerator() {}
+    ~CGeoGenerator() {}
 
 public:
     void BuildUnitCube( SMesh& t_meshOut );

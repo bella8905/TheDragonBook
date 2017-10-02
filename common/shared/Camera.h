@@ -7,48 +7,54 @@
 class CView;
 struct SRay;
 
-
 /////////////////////////////////////////////////////////////////
 //
 //  Camera Base
-//  
+//
+//  We use right handedness convention.
+//  and we name them right (for x-axis), up (for the y-axis)
+//  and forward for the (z-axis).
+//
+//  forward = neg( facing )
+//  https://www.scratchapixel.com/lessons/mathematics-physics-for-computer-graphics/lookat-function
+//
 /////////////////////////////////////////////////////////////////
 class CCamera
 {
 public:
-    CCamera( glm::vec4 t_pos = glm::vec4( 0.f, 0.f, 0.f, 1.f ), glm::vec4 t_facing = glm::vec4( 0.f, 0.f, 1.f, 0.f ), glm::vec4 t_up = glm::vec4( 0.f, 1.f, 0.f, 0.f ) );
+    CCamera( glm::vec4 t_pos = glm::vec4( 0.f, 0.f, 0.f, 1.f ), glm::vec4 t_forward = glm::vec4( 0.f, 0.f, -1.f, 0.f ), glm::vec4 t_up = glm::vec4( 0.f, 1.f, 0.f, 0.f ) );
     virtual ~CCamera();
 
 protected:
     /////////////////////////////////////////////////////////////////
     //
     //  camera position
-    //  
+    //
     /////////////////////////////////////////////////////////////////
     glm::vec4 _pos;
     /////////////////////////////////////////////////////////////////
     //
     //  camera facing direction
-    //  
+    //
     /////////////////////////////////////////////////////////////////
-    glm::vec4 _facing;
+    glm::vec4 _forward;
     /////////////////////////////////////////////////////////////////
     //
     //  camera up direction
-    //  
+    //
     /////////////////////////////////////////////////////////////////
     glm::vec4 _up;
 
 public:
-    void Setup( const glm::vec4& t_pos, const glm::vec4& t_facing, const glm::vec4& t_up );
+    void Setup( const glm::vec4& t_pos, const glm::vec4& t_forward, const glm::vec4& t_up );
 
     glm::vec4 GetPos()
     {
         return _pos;
     }
-    glm::vec4 GetFacing()
+    glm::vec4 GetForward()
     {
-        return _facing;
+        return _forward;
     }
 
     void SetToView( CView* t_view );
@@ -57,13 +63,10 @@ public:
     }
 };
 
-
-
-
 /////////////////////////////////////////////////////////////////
 //
 //  Freefly Camera
-//  
+//
 /////////////////////////////////////////////////////////////////
 class CFreeFlyCamera : public CCamera
 {
@@ -105,10 +108,7 @@ public:
     /////////////////////////////////////////////////////////////////
     //
     //  Update camera controls
-    //  
+    //
     /////////////////////////////////////////////////////////////////
     virtual void UpdateControl( double t_delta );
 };
-
-
-

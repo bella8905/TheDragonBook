@@ -1,19 +1,15 @@
 #include "Utl_LogMsg.h"
 
-
 #include "Input.h"
 
 CInput gInputs;
 
-
 CInput::CInput()
 {
-
 }
 
 CInput::~CInput()
 {
-
 }
 
 void CInput::_initKeyMap()
@@ -58,7 +54,7 @@ void CInput::Update()
 
     // this should be the last step of update,
     // so all stored key states can be used by other module in this frame.
-    // 
+    //
     // clear pressed and released,
     // since they are all about this frame
     for( int i = KEY_NONE + 1; i < KEY_COUNTER; ++i )
@@ -69,7 +65,7 @@ void CInput::Update()
 }
 
 // KeyDown is acting like key repeated,
-// if we hold the key, 
+// if we hold the key,
 // KeyDown will be issued multiple times,
 // at each repeated interval.
 void CInput::OnKeyDown( WPARAM t_key )
@@ -89,7 +85,6 @@ void CInput::OnKeyDown( WPARAM t_key )
 
     SetKeyState( key, STATE_HELD, true );
     SetKeyState( key, STATE_RELEASED, false );
-
 }
 
 void CInput::OnKeyUp( WPARAM t_key )
@@ -101,13 +96,11 @@ void CInput::OnKeyUp( WPARAM t_key )
     SetKeyState( key, STATE_PRESSED, false );
     SetKeyState( key, STATE_HELD, false );
     SetKeyState( key, STATE_RELEASED, true );
-
 }
-
 
 // MouseDown is different than KeyDown,
 // It's acting as pressed.
-// If we hold the mouse button, 
+// If we hold the mouse button,
 // only the first time will we have MouseDown.
 void CInput::OnMouseDown( WPARAM t_btn, WPARAM t_mod, int t_x, int t_y )
 {
@@ -139,7 +132,6 @@ void CInput::OnMouseMove( WPARAM t_btn, int t_x, int t_y )
 {
     SetMousePosition( t_x, t_y );
 }
-
 
 bool CInput::GetKeyState( KEY t_key, KEY_STATE t_keyState )
 {
@@ -175,7 +167,6 @@ void CInput::SetKeyState( KEY t_key, KEY_STATE t_keyState, bool t_bool )
     _keyStates[t_key]._states[t_keyState] = t_bool;
 }
 
-
 void CInput::GetMousePosition( int& t_x, int& t_y )
 {
     t_x = _mouseStates._x;
@@ -207,4 +198,3 @@ void CInput::_printMouseStates()
 {
     LogMsg << "Mouse Position: ( " << _mouseStates._x << ", " << _mouseStates._y << " )" << LogEndl;
 }
-

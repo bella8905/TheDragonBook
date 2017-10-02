@@ -1,18 +1,12 @@
-
 #include <d3dcompiler.h>
-
 
 #include "Utl_Global.h"
 #include "Utl_LogMsg.h"
-
 
 #include "Graphics.h"
 #include "View.h"
 #include "GeoGenerator.h"
 #include "D3DSystem.h"
-
-
-
 
 /////////////////////////////////////////////////////////////////
 // d3d related stuff
@@ -33,8 +27,10 @@
 
 // force to use real graphic card on Optimus system
 // https://stackoverflow.com/questions/10535950/forcing-nvidia-gpu-programmatically-in-optimus-laptops
+// don't choose the video card manually in code,
+// since it's possible that the card doesn't have
+// any monitor attached, which will cause failure in creating device.
 extern "C" {   _declspec( dllexport ) DWORD NvOptimusEnablement = 0x00000001; }
-
 
 void CD3D::VIDEOCARD_INFO::PrintInfo()
 {
@@ -42,11 +38,9 @@ void CD3D::VIDEOCARD_INFO::PrintInfo()
     LogMsg << "Dedicated Video Memory: " << _videoCardMemory << LogEndl;
     LogMsg << "Dedicated System Memory: " << _dedicatedSystemMemory << LogEndl;
     LogMsg << "Shared System Memory: " << _sharedSystemMemory << LogEndl;
-
 }
 
-
-CD3D::CD3D()
+CD3D::CD3D() : _rsFilled( nullptr ), _rsWireframe( nullptr )
 {
     _swapChain = nullptr;
     _device = nullptr;
@@ -55,10 +49,7 @@ CD3D::CD3D()
     _depthStencilBuffer = nullptr;
     _depthStencilState = nullptr;
     _depthStencilView = nullptr;
-    _rasterizerState = nullptr;
 }
-
-
 
 CD3D::~CD3D()
 {
@@ -127,9 +118,9 @@ bool CD3D::_updateVideoCardInfo()
     // Display mode is for fullscreen exclusive mode...
     // Seems we don't need to do this...
     // https://docs.oracle.com/javase/tutorial/extra/fullscreen/displaymode.html
-    // 
+    //
     // Now go through all the display modes and find the one that matches the screen width and height.
-    // When a match is found store the numerator and denominator of the refresh rate for that monitor.  
+    // When a match is found store the numerator and denominator of the refresh rate for that monitor.
     for( i = 0; i < numModes; i++ )
     {
         if( displayModeList[i].Width == width )
@@ -160,7 +151,7 @@ bool CD3D::_updateVideoCardInfo()
     _videoCardInfo._videoCardMemory = ( int )( adapterDesc.DedicatedVideoMemory / 1024 / 1024 );
     _videoCardInfo._dedicatedSystemMemory = ( int )( adapterDesc.DedicatedSystemMemory / 1024 / 1024 );
     _videoCardInfo._sharedSystemMemory = ( int )( adapterDesc.SharedSystemMemory / 1024 / 1024 );
-    _videoCardInfo._videoCardDescription = ConvertLPCWSTRToString( adapterDesc.Description );  
+    _videoCardInfo._videoCardDescription = ConvertLPCWSTRToString( adapterDesc.Description );
     _videoCardInfo.PrintInfo();
 
     // Release the adapter output.
@@ -178,13 +169,13 @@ bool CD3D::_updateVideoCardInfo()
 /////////////////////////////////////////////////////////////////////////////
 // Create Device and Device Context.
 //
-// Device: 
-//  a device is an object that is intended to be 
+// Device:
+//  a device is an object that is intended to be
 //  a virtual representation of your video adapter.
 //
-// Device Context: 
-//  a device context is responsible for managing the GPU 
-//  and the rendering pipeline (the device mostly handles video memory). 
+// Device Context:
+//  a device context is responsible for managing the GPU
+//  and the rendering pipeline (the device mostly handles video memory).
 //  This object is used to render graphics and to determine how they will be rendered.
 /////////////////////////////////////////////////////////////////////////////
 bool CD3D::_createDevice()
@@ -192,7 +183,7 @@ bool CD3D::_createDevice()
     HRESULT result;
 
     UINT createDeviceFlags = 0;
-#if defined(DEBUG) || defined(_DEBUG)  
+#if defined(DEBUG) || defined(_DEBUG)
     createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
@@ -202,7 +193,7 @@ bool CD3D::_createDevice()
         D3D_DRIVER_TYPE_HARDWARE,
         nullptr,                 // no software device
         createDeviceFlags,
-        nullptr, 
+        nullptr,
         0,              // default feature level array
         D3D11_SDK_VERSION,
         &_device,
@@ -215,7 +206,6 @@ bool CD3D::_createDevice()
         return false;
     }
 
-
     if( featureLevel != D3D_FEATURE_LEVEL_11_0 )
     {
         MessageBox( 0, L"Direct3D Feature Level 11 unsupported.", 0, 0 );
@@ -227,7 +217,7 @@ bool CD3D::_createDevice()
 
 /////////////////////////////////////////////////////////////////////////////
 // Check MSAA
-//  All Direct3D 11 capable devices support 4X MSAA for all render 
+//  All Direct3D 11 capable devices support 4X MSAA for all render
 //  target formats, so we only need to check quality support.
 /////////////////////////////////////////////////////////////////////////////
 bool CD3D::_checkAndSetupMSAA()
@@ -264,7 +254,6 @@ bool CD3D::_createSwapChain( HWND t_hwnd )
     // Set regular 32-bit surface for the back buffer.
     scd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 
-
     // Set to full screen or windowed mode.
     if( CGraphics::GetIsFullScreen() )
     {
@@ -285,7 +274,7 @@ bool CD3D::_createSwapChain( HWND t_hwnd )
         scd.BufferDesc.RefreshRate.Numerator = 0;
         scd.BufferDesc.RefreshRate.Denominator = 1;
     }
-    // Use 4X MSAA? 
+    // Use 4X MSAA?
     if( CGraphics::GetIs4xMSAAEnabled() )
     {
         scd.SampleDesc.Count = 4;
@@ -309,7 +298,7 @@ bool CD3D::_createSwapChain( HWND t_hwnd )
 
     // To correctly create the swap chain, we must use the IDXGIFactory that was
     // used to create the device.  If we tried to use a different IDXGIFactory instance
-    // (by calling CreateDXGIFactory), we get an error: "IDXGIFactory::CreateSwapChain: 
+    // (by calling CreateDXGIFactory), we get an error: "IDXGIFactory::CreateSwapChain:
     // This function is being called with a device from a different IDXGIFactory."
     IDXGIDevice* dxgiDevice = 0;
     result = _device->QueryInterface( __uuidof( IDXGIDevice ), ( void** )&dxgiDevice );
@@ -446,7 +435,6 @@ bool CD3D::_createDepthStensilBuffer()
     // Set the depth stencil state.
     _deviceContext->OMSetDepthStencilState( _depthStencilState, 1 );
 
-
     /////////////////////////////////////////////////////////////////////////////
     // Depth Stencil View
     /////////////////////////////////////////////////////////////////////////////
@@ -482,7 +470,7 @@ bool CD3D::_bindViews()
     return true;
 }
 
-bool CD3D::_setupRasterizer()
+bool CD3D::_createPresetRS()
 {
     HRESULT result;
 
@@ -500,13 +488,32 @@ bool CD3D::_setupRasterizer()
     rasterDesc.SlopeScaledDepthBias = 0.0f;
 
     // Create the rasterizer state from the description we just filled out.
-    result = _device->CreateRasterizerState( &rasterDesc, &_rasterizerState );
+    result = _device->CreateRasterizerState( &rasterDesc, &_rsFilled );
     if( FAILED( result ) )
     {
         return false;
     }
 
-    _deviceContext->RSSetState( _rasterizerState );
+    rasterDesc.FillMode = D3D11_FILL_WIREFRAME;
+    result = _device->CreateRasterizerState( &rasterDesc, &_rsWireframe );
+    if( FAILED( result ) )
+    {
+        return false;
+    }
+
+    return true;
+}
+
+void CD3D::_destroyPresetRS()
+{
+    ReleaseCOM( _rsWireframe );
+    ReleaseCOM( _rsFilled );
+}
+
+bool CD3D::_setupRasterizer()
+{
+    if( !_createPresetRS() ) return false;
+    _deviceContext->RSSetState( _rsFilled );
 
     return true;
 }
@@ -539,7 +546,7 @@ void CD3D::SetViewport( const SViewPort& t_viewport )
 //     rect.right = rect.left + t_viewport._width;
 //     rect.top = static_cast< LONG >( t_viewport._y );
 //     rect.bottom = rect.top + t_viewport._height;;
-// 
+//
 //     _deviceContext->RSSetScissorRects( 1, &rect );
 }
 
@@ -578,10 +585,8 @@ bool CD3D::Initialize( HWND t_hwnd )
     return true;
 }
 
-
 void CD3D::ShutDown()
 {
-
     // Direct3D is actually incapable of closing when in fullscreen mode.
     // This is due to certain threading issues that occur behind the scenes.
     // To correctly close down, we must make sure that we are in windowed mode.
@@ -591,7 +596,8 @@ void CD3D::ShutDown()
         _swapChain->SetFullscreenState( false, nullptr );
     }
 
-    ReleaseCOM( _rasterizerState );
+    _destroyPresetRS();
+
     ReleaseCOM( _depthStencilView );
     ReleaseCOM( _depthStencilState );
     ReleaseCOM( _depthStencilBuffer );
@@ -603,11 +609,9 @@ void CD3D::ShutDown()
     return;
 }
 
-
 void CD3D::BeginScene( float red, float green, float blue, float alpha )
 {
     float color[4];
-
 
     // Setup the color to clear the buffer to.
     color[0] = red;
@@ -623,7 +627,6 @@ void CD3D::BeginScene( float red, float green, float blue, float alpha )
 
     return;
 }
-
 
 void CD3D::EndScene()
 {
@@ -649,7 +652,7 @@ bool CD3D::CreateBufferFromMeshData( const SMesh& t_mesh, ID3D11Buffer** t_verte
     // vertex buffer
     D3D11_BUFFER_DESC vertexBufferDesc;
     vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-    vertexBufferDesc.ByteWidth = (UINT)( sizeof( SVertex ) * t_mesh._vertices.size() );
+    vertexBufferDesc.ByteWidth = ( UINT )( sizeof( SVertex ) * t_mesh._vertices.size() );
     vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     vertexBufferDesc.CPUAccessFlags = 0;
     vertexBufferDesc.MiscFlags = 0;
@@ -673,7 +676,7 @@ bool CD3D::CreateBufferFromMeshData( const SMesh& t_mesh, ID3D11Buffer** t_verte
     {
         D3D11_BUFFER_DESC indexBufferDesc;
         indexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-        indexBufferDesc.ByteWidth = (UINT)( sizeof( uint ) * t_mesh._indices.size() );
+        indexBufferDesc.ByteWidth = ( UINT )( sizeof( uint ) * t_mesh._indices.size() );
         indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
         indexBufferDesc.CPUAccessFlags = 0;
         indexBufferDesc.MiscFlags = 0;
@@ -694,4 +697,45 @@ bool CD3D::CreateBufferFromMeshData( const SMesh& t_mesh, ID3D11Buffer** t_verte
     }
 
     return true;
+}
+
+void CD3D::Draw( ID3D11Buffer*& t_vertexBuffer, UINT t_numOfVertices, UINT t_vertexOffset /*= 0*/ )
+{
+    if( t_vertexBuffer == nullptr ) return;
+    //
+}
+
+void CD3D::DrawIndexed( ID3D11Buffer*& t_vertexBuffer, ID3D11Buffer*& t_indexBuffer, UINT t_numOfIndices, UINT t_vertexOffset/* = 0*/, UINT t_indexOffset/* = 0*/ )
+{
+    if( t_vertexBuffer == nullptr || t_indexBuffer == nullptr ) return;
+
+    uint stride = sizeof( SVertex );
+    uint offset = 0;
+
+    // Set the vertex buffer to active in the input assembler so it can be rendered.
+    _deviceContext->IASetVertexBuffers( 0, 1, &t_vertexBuffer, &stride, &offset );
+
+    // Set the index buffer to active in the input assembler so it can be rendered.
+    _deviceContext->IASetIndexBuffer( t_indexBuffer, DXGI_FORMAT_R32_UINT, 0 );
+
+    // Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
+    _deviceContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
+
+    // issue draw call
+    _deviceContext->DrawIndexed( t_numOfIndices, t_indexOffset, t_vertexOffset );
+}
+
+void CD3D::SetRS( RasterizerState t_rs )
+{
+    if( _deviceContext == nullptr ) return;
+
+    switch( t_rs )
+    {
+        case FILLED:
+            _deviceContext->RSSetState( _rsFilled );
+            break;
+        case WIREFRAME:
+            _deviceContext->RSSetState( _rsWireframe );
+            break;
+    }
 }

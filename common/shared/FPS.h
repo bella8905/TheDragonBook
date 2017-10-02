@@ -1,11 +1,10 @@
 #include "Utl_Global.h"
 
-
 class CFPSCounter
 {
 public:
     CFPSCounter();
-    ~CFPSCounter() { }
+    ~CFPSCounter() {}
 
 private:
     float _secondsPerCount;;
@@ -19,7 +18,7 @@ public:
         return _deltaTime;
     }
 
-    uint GetFPS() 
+    uint GetFPS()
     {
         return _fps;
     }

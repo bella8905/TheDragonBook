@@ -1,7 +1,6 @@
 #include <windows.h>
 #include <profileapi.h>
 
-
 #include "FPS.h"
 
 CFPSCounter::CFPSCounter() : _deltaTime( 0.0f ), _fps( 0 )
@@ -17,7 +16,7 @@ void CFPSCounter::Update()
     static float timeElapsed = 0.0;
     static uint fps = 0;
     long long int curTime;
-    QueryPerformanceCounter( (LARGE_INTEGER*)&curTime );
+    QueryPerformanceCounter( ( LARGE_INTEGER* )&curTime );
 
     _deltaTime = ( float )( curTime - prevTime ) * _secondsPerCount;
     prevTime = curTime;

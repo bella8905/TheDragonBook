@@ -3,8 +3,6 @@
 
 #include "Graphics.h"
 
-
-
 // global video settings
 static struct SGraphicSettings
 {
@@ -18,7 +16,6 @@ static struct SGraphicSettings
     int _currentClientWidth;        // current client width
     int _currentClientHeight;       // current client height
 
-
     SGraphicSettings()
     {
         _bFullScreen = false;
@@ -27,10 +24,7 @@ static struct SGraphicSettings
         _defaultClientWidth = 800;
         _defaultClientHeight = 600;
     }
-
 } Graphics_GlobalSettings;
-
-
 
 bool CGraphics::GetIsFullScreen()
 {
@@ -72,15 +66,11 @@ void CGraphics::SetScreenSize( int t_clientWidth, int t_clientHeight )
 
 CGraphics::CGraphics() : _d3d( nullptr )
 {
-
 }
 
 CGraphics::~CGraphics()
 {
-
 }
-
-
 
 bool CGraphics::Initialize( const int& t_clientWidth, const int& t_clientHeight, HWND t_hwnd )
 {
@@ -129,4 +119,3 @@ void CGraphics::SetViewport( const SViewPort& t_viewport )
         _d3d->SetViewport( t_viewport );
     }
 }
-

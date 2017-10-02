@@ -1,13 +1,9 @@
 #include "glm/glm.hpp"
 #include "Object.h"
 
-
 CObject::CObject( GEO_TYPE t_geo ) : _geo( t_geo ), _translate( 0.f ), _rot( 1.f ), _scale( 1.f )
 {
-
 }
-
-
 
 void CObject::resetModelMatrix()
 {
@@ -42,7 +38,6 @@ void CObject::resetModelMatrix()
     glm::mat4 inv_rotMat = glm::transpose( rotMat );
 
     _invModelMat = inv_scaleMat * inv_rotMat * inv_translateMat;
-
 }
 
 void CObject::SetupModelMatrix( const glm::vec3& t_translate, const glm::mat3& t_rot, const float& t_scale )
@@ -56,15 +51,12 @@ void CObject::SetupModelMatrix( const glm::vec3& t_translate, const glm::mat3& t
 
 void CObject::SetupModelMatrix( const glm::vec3& t_translate, const glm::vec3& t_rot, const float& t_scale )
 {
-
     // fill in rot matrix
     glm::mat3 rot = glm::mat3( 1.f );
     SetupModelMatrix( t_translate, rot, t_scale );
 }
 
-
 void CObject::Draw()
 {
     CGeoContainer::GetInstance().DrawGeo( _geo );
 }
-

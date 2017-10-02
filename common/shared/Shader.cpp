@@ -11,10 +11,8 @@
 
 #include "Shader.h"
 
-
 CMVPVS g_mvpVS;
 CSimpleColorPS g_simpleColorPS;
-
 
 static struct SHADERS
 {
@@ -78,7 +76,6 @@ static struct SHADERS
             }
         }
     }
-
 } ActiveShaders;
 
 void Shaders_SetAsActive( SHADER_TYPE t_type, CShader* t_shader )
@@ -99,15 +96,12 @@ void Shaders_Clear()
     }
 }
 
-
 CShader::CShader() : _device( nullptr ), _deviceContext( nullptr )
 {
-
 }
 
 CShader::~CShader()
 {
-
 }
 
 void CShader::Init( ID3D11Device* t_device, ID3D11DeviceContext* t_deviceContext )
@@ -137,8 +131,6 @@ void CShader::_outputErrorMessage( ID3D10Blob* t_errorMessage, LPCWCHAR _shaderF
     LogError << compileErrors << LogEndl;
 
     ReleaseCOM( t_errorMessage );
-
-
 }
 
 ID3D10Blob* CShader::_compileShaderToBuffer( LPCWCHAR t_filename, LPCSTR t_entryPoint, LPCSTR t_target )
@@ -150,8 +142,8 @@ ID3D10Blob* CShader::_compileShaderToBuffer( LPCWCHAR t_filename, LPCSTR t_entry
     DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 #ifdef _DEBUG
     // Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
-    // Setting this flag improves the shader debugging experience, but still allows 
-    // the shaders to be optimized and to run exactly the way they will run in 
+    // Setting this flag improves the shader debugging experience, but still allows
+    // the shaders to be optimized and to run exactly the way they will run in
     // the release configuration of this program.
     dwShaderFlags |= D3DCOMPILE_DEBUG;
 
@@ -188,7 +180,6 @@ void CShader::_createShader( LPCWCHAR t_filename, LPCSTR t_entryPoint )
     _postCreateShader();
 }
 
-
 CVertexShader::~CVertexShader()
 {
 }
@@ -197,7 +188,6 @@ void CVertexShader::_onDeint()
 {
     ReleaseCOM( _vertexShader );
 }
-
 
 bool CVertexShader::_createFromFile( LPCWCHAR t_filename, LPCSTR t_entryPoint )
 {
@@ -222,7 +212,6 @@ bool CVertexShader::_createFromFile( LPCWCHAR t_filename, LPCSTR t_entryPoint )
         return false;
     }
     return true;
-
 }
 
 void CVertexShader::Bind( const CObject* t_obj )
@@ -232,8 +221,6 @@ void CVertexShader::Bind( const CObject* t_obj )
     // Set the vertex and pixel shaders that will be used to render this triangle.
     _deviceContext->VSSetShader( _vertexShader, nullptr, 0 );
 }
-
-
 
 CPixelShader::~CPixelShader()
 {
@@ -258,7 +245,6 @@ bool CPixelShader::_createFromFile( LPCWCHAR t_filename, LPCSTR t_entryPoint )
         return false;
     }
 
-
     ReleaseCOM( pixelShaderBuffer );
 
     return true;
@@ -268,11 +254,6 @@ void CPixelShader::Bind( const CObject* t_obj )
 {
     _deviceContext->PSSetShader( _pixelShader, nullptr, 0 );
 }
-
-
-
-
-
 
 void CMVPVS::_onInit()
 {
@@ -295,7 +276,6 @@ bool CMVPVS::_createIALayout( ID3D10Blob* t_vertexShaderBuffer )
         { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT , 0, offsetof( SVertex, _color ), D3D11_INPUT_PER_VERTEX_DATA , 0 },
     };
 
-
     // Get a count of the elements in the layout.
     uint numElements = sizeof( polygonLayout ) / sizeof( polygonLayout[0] );
 
@@ -308,9 +288,7 @@ bool CMVPVS::_createIALayout( ID3D10Blob* t_vertexShaderBuffer )
     }
 
     return true;
-
 }
-
 
 bool CMVPVS::_postCreateShader()
 {
@@ -333,7 +311,6 @@ bool CMVPVS::_postCreateShader()
     }
 
     return true;
-
 }
 
 void CMVPVS::Bind( const CObject* t_obj )
@@ -368,11 +345,7 @@ void CMVPVS::Bind( const CObject* t_obj )
     CVertexShader::Bind( t_obj );
 }
 
-
-
 void CSimpleColorPS::_onInit()
 {
     _createShader( L"../common/shaders/single_color.ps", "ColorPixelShader" );
-
 }
-

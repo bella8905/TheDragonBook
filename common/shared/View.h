@@ -25,15 +25,12 @@ struct SViewPort
     }
 };
 
-
 class CView
 {
-
 public:
 
     struct SFrustum
     {
-
     };
 
 public:
@@ -45,19 +42,18 @@ public:
     {
     }
 
-
 protected:
 
     /////////////////////////////////////////////////////////////////
     //
-    // if it is a perspective view or orthographic view 
+    // if it is a perspective view or orthographic view
     //
     /////////////////////////////////////////////////////////////////
     bool _bPerspective;
 
     /////////////////////////////////////////////////////////////////
     //
-    // view port, 
+    // view port,
     // this could be a full window view,
     // or just part of the whole screen.
     //
@@ -77,17 +73,16 @@ protected:
     //
     // transform matrix converting points from view to world space.
     //
-    // this is the inverse of _world2ViewMatrix, 
+    // this is the inverse of _world2ViewMatrix,
     //
     /////////////////////////////////////////////////////////////////
     glm::mat4 _view2WorldMatrix;
 
-
     /////////////////////////////////////////////////////////////////
     //
-    // transform matrix converting points from view space to homogeneous 
+    // transform matrix converting points from view space to homogeneous
     // clip space
-    // 
+    //
     // Projection matrix, is the P in MVP.
     //
     /////////////////////////////////////////////////////////////////
@@ -95,7 +90,7 @@ protected:
 
     /////////////////////////////////////////////////////////////////
     //
-    // transform matrix converting points from homogeneous 
+    // transform matrix converting points from homogeneous
     // clip space to view space.
     //
     // this is the inverse of _view2ProjMatrix,
@@ -105,9 +100,9 @@ protected:
 
     /////////////////////////////////////////////////////////////////
     //
-    // transform matrix converting points from world space 
+    // transform matrix converting points from world space
     // to clip space.
-    // 
+    //
     // _view2ProjMatrix * _view2WorldMatrix
     //
     /////////////////////////////////////////////////////////////////
@@ -168,7 +163,6 @@ protected:
     float getHorizontalPerspective( const glm::mat4& t_view2Proj );
     float getVerticalPerspective( const glm::mat4& t_view2Proj );
 
-
 public:
     /////////////////////////////////////////////////////////////////
     //
@@ -183,7 +177,7 @@ public:
     SViewPort* GetViewPort();
 
     void GetCameraPosition( glm::vec4& t_pos );
-    void GetCameraPositionFaceUpAndRight( glm::vec4& t_pos, glm::vec4& t_face, glm::vec4& t_up, glm::vec4& t_right );
+    void GetCameraPositionForwardUpAndRight( glm::vec4& t_pos, glm::vec4& t_face, glm::vec4& t_up, glm::vec4& t_right );
 
     /////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////
@@ -199,14 +193,12 @@ public:
     // position.
     // facing direction.
     // almost up direction.
-    // 
-    // it doesn't require the facing direction being 
+    //
+    // it doesn't require the facing direction being
     // perpendicular to the up direction
     //
     /////////////////////////////////////////////////////////////////
-    void SetCameraPostionFaceAndUp( glm::vec4 t_pos, glm::vec4 t_facing, glm::vec4 t_up = glm::vec4( 0.f, 1.f, 0.f, 0.f ) );
-
-
+    void SetCameraPostionForwardAndUp( glm::vec4 t_pos, glm::vec4 t_facing, glm::vec4 t_up = glm::vec4( 0.f, 1.f, 0.f, 0.f ) );
 
     /////////////////////////////////////////////////////////////////
     //

@@ -1,4 +1,4 @@
-#pragma  once 
+#pragma  once
 
 #include "Geometry.h"
 
@@ -46,7 +46,6 @@ public:
         resetModelMatrix();
     }
 
-
     void SetRot( const glm::mat3& t_rot )
     {
         _rot = t_rot;
@@ -59,5 +58,4 @@ public:
     {
         return _modelMat;
     }
-
 };

@@ -1,4 +1,3 @@
-
 #include <windowsx.h>
 
 #include "Utl_LogMsg.h"
@@ -9,18 +8,13 @@
 
 CSystem* CSystem::_pActiveInstance = nullptr;
 
-
 CSystem::CSystem( HINSTANCE t_hinstance, LPCWSTR t_appName ) : _hinstance( t_hinstance ), _inputs( nullptr ), _graphics( nullptr ), _applicationName( t_appName )
 {
-
 }
-
 
 CSystem::~CSystem()
 {
-
 }
-
 
 bool CSystem::Initialize()
 {
@@ -31,7 +25,6 @@ bool CSystem::Initialize()
 
     // Initialize the windows api.
     _initWindow( clientWidth, clientHeight );
-
 
     // Inputs module
     _inputs = &gInputs;
@@ -52,7 +45,6 @@ bool CSystem::Initialize()
     return true;
 }
 
-
 void CSystem::ShutDown()
 {
     if( _graphics )
@@ -65,7 +57,6 @@ void CSystem::ShutDown()
     _inputs = nullptr;
 
     _shutDownWindow();
-
 }
 
 void CSystem::Run()
@@ -103,7 +94,6 @@ void CSystem::Run()
                 bDone = true;
             }
         }
-
     }
 }
 
@@ -143,7 +133,6 @@ LRESULT CALLBACK CSystem::MessageHandler( HWND t_hwnd, UINT t_umsg, WPARAM t_wpa
                     mMaximized = true;
                     OnResize();
                 } else if( wParam == SIZE_RESTORED ) {
-
                     // Restoring from minimized state?
                     if( mMinimized ) {
                         mAppPaused = false;
@@ -204,8 +193,8 @@ LRESULT CALLBACK CSystem::MessageHandler( HWND t_hwnd, UINT t_umsg, WPARAM t_wpa
             return 0;
         }
 
-        // The WM_MENUCHAR message is sent when a menu is active and the user presses 
-        // a key that does not correspond to any mnemonic or accelerator key. 
+        // The WM_MENUCHAR message is sent when a menu is active and the user presses
+        // a key that does not correspond to any mnemonic or accelerator key.
         case WM_MENUCHAR:
             // Don't beep when we alt-enter.
             return MAKELRESULT( 0, MNC_CLOSE );
@@ -215,7 +204,6 @@ LRESULT CALLBACK CSystem::MessageHandler( HWND t_hwnd, UINT t_umsg, WPARAM t_wpa
             ( ( MINMAXINFO* )t_lparam )->ptMinTrackSize.x = 200;
             ( ( MINMAXINFO* )t_lparam )->ptMinTrackSize.y = 200;
             return 0;
-
 
         case WM_LBUTTONDOWN:
             _inputs->OnMouseDown( MK_LBUTTON, t_wparam, GET_X_LPARAM( t_lparam ), GET_Y_LPARAM( t_lparam ) );
@@ -239,7 +227,6 @@ LRESULT CALLBACK CSystem::MessageHandler( HWND t_hwnd, UINT t_umsg, WPARAM t_wpa
             _inputs->OnMouseMove( t_wparam, GET_X_LPARAM( t_lparam ), GET_Y_LPARAM( t_lparam ) );
             return 0;
 
-
             // Check if a key has been pressed on the keyboard.
         case WM_KEYDOWN:
         {
@@ -256,8 +243,6 @@ LRESULT CALLBACK CSystem::MessageHandler( HWND t_hwnd, UINT t_umsg, WPARAM t_wpa
             return 0;
         }
 
-
-
         // Any other messages send to the default message handler as our application won't make use of them.
         default:
         {
@@ -265,7 +250,6 @@ LRESULT CALLBACK CSystem::MessageHandler( HWND t_hwnd, UINT t_umsg, WPARAM t_wpa
         }
     }
 }
-
 
 bool CSystem::_update()
 {
@@ -401,19 +385,14 @@ void CSystem::_shutDownWindow()
     return;
 }
 
-
-
 LRESULT CALLBACK WndProc( HWND t_hwnd, UINT t_umsg, WPARAM t_wparam, LPARAM t_lparam )
 {
-
     if( CSystem::GetActiveInstance() != nullptr )
     {
         return CSystem::GetActiveInstance()->MessageHandler( t_hwnd, t_umsg, t_wparam, t_lparam );
     }
     return 0;
 }
-
-
 
 CGraphics* System_GetGraphics()
 {

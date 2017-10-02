@@ -14,14 +14,12 @@ public:
     {
         KEY_NONE = 0,
 
-#define INPUT_KEY_ITEM( k, wkey, n ) KEY_##k,
-#include "InputKeys.items"
+    #define INPUT_KEY_ITEM( k, wkey, n ) KEY_##k,
+    #include "InputKeys.items"
 
         // counter, don't use it.
         KEY_COUNTER,
-
     };
-
 
     enum KEY_STATE
     {
@@ -43,11 +41,10 @@ private:
     std::unordered_map<KEY_STATE, const char*> _stateNames;
     std::unordered_map<KEY, const char*> _keyNames;
 
-
     /////////////////////////////////////////////////////////////////
     //
     // Key States
-    // 
+    //
     // If key is pressed/held/released.
     //
     /////////////////////////////////////////////////////////////////
@@ -61,7 +58,7 @@ private:
     /////////////////////////////////////////////////////////////////
     //
     // Mouse states
-    // 
+    //
     // Mouse related stuff. pointer x/y position
     //
     /////////////////////////////////////////////////////////////////
@@ -70,7 +67,6 @@ private:
         int _x;
         int _y;
     }_mouseStates;
-
 
 private:
     void _initKeyMap();
@@ -106,7 +102,6 @@ public:
 
     void GetMousePosition( int& t_x, int& t_y );
     void SetMousePosition( int t_x, int t_y );
-
 };
 
 extern CInput gInputs;

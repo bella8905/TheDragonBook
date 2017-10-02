@@ -9,13 +9,11 @@ class CGraphics;
 class CD3D;
 class CApp;
 
-
 class CSystem
 {
 public:
     CSystem( HINSTANCE t_instance, LPCWSTR t_appName = L"TheDragonBook" );
     ~CSystem();
-
 
 private:
     static CSystem* _pActiveInstance;
@@ -57,7 +55,6 @@ protected:
     //////////////////////////////////////////////////////////////////////////
     virtual CGraphics* _createApp() = 0;
 };
-
 
 static LRESULT CALLBACK WndProc( HWND t_hwnd, UINT t_umsg, WPARAM t_wparam, LPARAM t_lparam );
 
