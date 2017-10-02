@@ -59,7 +59,8 @@ void CGeoGenerator::BuildGrid( float t_width, float t_depth, uint t_m, uint t_n,
     }
 
     // indices
-    uint numOfIndices = ( t_m - 1 ) * ( t_n - 1 ) * 2 * 3;
+    uint numOfFaces = ( t_m - 1 ) * ( t_n - 1 );
+    uint numOfIndices = numOfFaces * 4 * 2;
     t_meshOut._indices.resize( numOfIndices );
 
     uint indexIdx = 0;
@@ -67,10 +68,16 @@ void CGeoGenerator::BuildGrid( float t_width, float t_depth, uint t_m, uint t_n,
     {
         for( uint i = 0; i < t_m - 1; ++i )
         {
+            // 0 - 2
             t_meshOut._indices[indexIdx++] = j * t_m + i;
             t_meshOut._indices[indexIdx++] = ( j + 1 ) * t_m + i;
+            // 2 - 3
+            t_meshOut._indices[indexIdx++] = ( j + 1 ) * t_m + i;
             t_meshOut._indices[indexIdx++] = ( j + 1 ) * t_m + i + 1;
+            // 3 - 1
             t_meshOut._indices[indexIdx++] = ( j + 1 ) * t_m + i + 1;
+            t_meshOut._indices[indexIdx++] = j * t_m + i + 1;
+            // 1 - 0
             t_meshOut._indices[indexIdx++] = j * t_m + i + 1;
             t_meshOut._indices[indexIdx++] = j * t_m + i;
         }

@@ -705,7 +705,7 @@ void CD3D::Draw( ID3D11Buffer*& t_vertexBuffer, UINT t_numOfVertices, UINT t_ver
     //
 }
 
-void CD3D::DrawIndexed( ID3D11Buffer*& t_vertexBuffer, ID3D11Buffer*& t_indexBuffer, UINT t_numOfIndices, UINT t_vertexOffset/* = 0*/, UINT t_indexOffset/* = 0*/ )
+void CD3D::DrawIndexed( ID3D11Buffer*& t_vertexBuffer, ID3D11Buffer*& t_indexBuffer, UINT t_numOfIndices, D3D11_PRIMITIVE_TOPOLOGY t_topology /*= D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST*/, UINT t_vertexOffset/* = 0*/, UINT t_indexOffset/* = 0*/ )
 {
     if( t_vertexBuffer == nullptr || t_indexBuffer == nullptr ) return;
 
@@ -719,7 +719,7 @@ void CD3D::DrawIndexed( ID3D11Buffer*& t_vertexBuffer, ID3D11Buffer*& t_indexBuf
     _deviceContext->IASetIndexBuffer( t_indexBuffer, DXGI_FORMAT_R32_UINT, 0 );
 
     // Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
-    _deviceContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
+    _deviceContext->IASetPrimitiveTopology( t_topology );
 
     // issue draw call
     _deviceContext->DrawIndexed( t_numOfIndices, t_indexOffset, t_vertexOffset );

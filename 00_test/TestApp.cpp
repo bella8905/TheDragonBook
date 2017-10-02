@@ -22,7 +22,7 @@ void CTestApp::SCENE::Init()
     _objects.push_back( box );
 
     // view matrix
-    glm::vec3 camPos( 0.f, 0.f, 2.0f );
+    glm::vec3 camPos( 0.f, 2.f, 2.0f );
     glm::vec3 camTarget( 0.f, 0.f, 0.f );
     _pFreeflyCam = new CFreeFlyCamera( ToPositon( camPos ), ToPositon( camTarget ), glm::vec4( 0.f, 1.f, 0.f, 0.f ) );
 
@@ -34,12 +34,12 @@ void CTestApp::SCENE::Init()
     view.SetHorizontalFieldOfView( DegToRad( 80.f ) );
     View_SetAsActive( &view );
 
-    // test
-    glm::vec4 point{ 0.f, 0.f, 0.f, 1.f };
-    // pos in camera view
-    point = view.GetWorld2ViewMatrix() * point;
-    // pos in ndc
-    point = view.GetView2ProjMatrix() * point;
+    //     // test
+    //     glm::vec4 point{ 0.f, 0.f, 0.f, 1.f };
+    //     // pos in camera view
+    //     point = view.GetWorld2ViewMatrix() * point;
+    //     // pos in ndc
+    //     point = view.GetView2ProjMatrix() * point;
 }
 
 void CTestApp::SCENE::Deinit()
@@ -71,7 +71,7 @@ void CTestApp::_initGrid()
     CGeoGenerator geoGen;
     SMesh grid;
     float gridWidth = 10;
-    float gridDepth = 20;
+    float gridDepth = 10;
     uint m = 10;
     uint n = 10;
     glm::vec4 color( 1.f, 0.f, 0.f, 1.f );
@@ -94,7 +94,7 @@ void CTestApp::_drawGrid()
 {
     // draw grid
     Shaders_BindShader( nullptr );
-    _d3d->DrawIndexed( _gridVertexBuffer, _gridIndexBuffer, _numOfIndices );
+    _d3d->DrawIndexed( _gridVertexBuffer, _gridIndexBuffer, _numOfIndices, D3D11_PRIMITIVE_TOPOLOGY_LINELIST );
 }
 
 void CTestApp::_initScene()
@@ -140,9 +140,9 @@ bool CTestApp::_render()
 
     _d3d->BeginScene( 0.8f, 0.8f, 0.8f, 1.f );
 
-    // _d3d->SetRS( WIREFRAME );
-    // _drawGrid();
-    _scene.Draw();
+    _d3d->SetRS( WIREFRAME );
+    _drawGrid();
+    // _scene.Draw();
 
     _d3d->EndScene();
     return true;

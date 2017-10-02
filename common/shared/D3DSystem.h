@@ -91,5 +91,5 @@ public:
 
     // draw
     void Draw( ID3D11Buffer*& t_vertexBuffer, UINT t_numOfVertices, UINT t_vertexOffset = 0 );
-    void DrawIndexed( ID3D11Buffer*& t_vertexBuffer, ID3D11Buffer*& t_indexBuffer, UINT t_numOfIndices, UINT t_vertexOffset = 0, UINT t_indexOffset = 0 );
+    void DrawIndexed( ID3D11Buffer*& t_vertexBuffer, ID3D11Buffer*& t_indexBuffer, UINT t_numOfIndices, D3D11_PRIMITIVE_TOPOLOGY t_topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, UINT t_vertexOffset = 0, UINT t_indexOffset = 0 );
 };
