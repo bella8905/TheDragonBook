@@ -68,18 +68,29 @@ void CTestApp::SCENE::Draw()
 
 void CTestApp::_initGrid()
 {
+    glm::vec4 red( 1.f, 0.f, 0.f, 1.f );
+    glm::vec4 grey( 0.3f, 0.3f, 0.3f, 1.f );
+
     CGeoGenerator geoGen;
     SMesh grid;
     float gridWidth = 10;
     float gridDepth = 10;
     uint m = 10;
     uint n = 10;
-    glm::vec4 color( 1.f, 0.f, 0.f, 1.f );
-    geoGen.BuildGrid( gridWidth, gridDepth, m, n, color, grid );
-    _numOfIndices = ( uint )grid._indices.size();
+
+    geoGen.BuildGrid( gridWidth, gridDepth, m, n, grey, grid );
+    _gridNumOfIndices = ( uint )grid._indices.size();
     if( !_d3d->CreateBufferFromMeshData( grid, &_gridVertexBuffer, &_gridIndexBuffer ) )
     {
         LogError << "error creating grid" << LogEndl;
+    }
+
+    SMesh sphere;
+    geoGen.BuildSphere( 1.f, 20, 20, red, sphere );
+    _sphereNumOfIndices = ( uint )sphere._indices.size();
+    if( !_d3d->CreateBufferFromMeshData( sphere, &_sphereVertexBuffer, &_sphereIndexBuffer ) )
+    {
+        LogError << "error creating sphere" << LogEndl;
     }
 }
 
@@ -88,13 +99,15 @@ void CTestApp::_deinitGrid()
     // release grid buffer
     ReleaseCOM( _gridVertexBuffer );
     ReleaseCOM( _gridIndexBuffer );
+    ReleaseCOM( _sphereVertexBuffer );
+    ReleaseCOM( _sphereIndexBuffer );
 }
 
 void CTestApp::_drawGrid()
 {
     // draw grid
     Shaders_BindShader( nullptr );
-    _d3d->DrawIndexed( _gridVertexBuffer, _gridIndexBuffer, _numOfIndices, D3D11_PRIMITIVE_TOPOLOGY_LINELIST );
+    _d3d->DrawIndexed( _gridVertexBuffer, _gridIndexBuffer, _gridNumOfIndices, D3D11_PRIMITIVE_TOPOLOGY_LINELIST );
 }
 
 void CTestApp::_initScene()
@@ -142,6 +155,8 @@ bool CTestApp::_render()
 
     _d3d->SetRS( WIREFRAME );
     _drawGrid();
+    // _d3d->SetRS( FILLED );
+    _d3d->DrawIndexed( _sphereVertexBuffer, _sphereIndexBuffer, _sphereNumOfIndices, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
     // _scene.Draw();
 
     _d3d->EndScene();

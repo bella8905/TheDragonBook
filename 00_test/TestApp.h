@@ -10,7 +10,9 @@ class CCamera;
 class CTestApp : public CGraphics
 {
 public:
-    CTestApp() : _gridVertexBuffer( nullptr ), _gridIndexBuffer( nullptr ), _numOfIndices( 0 ) {}
+    CTestApp() : _gridVertexBuffer( nullptr ), _gridIndexBuffer( nullptr ), _gridNumOfIndices( 0 ), _sphereVertexBuffer( nullptr ), _sphereIndexBuffer( nullptr ), _sphereNumOfIndices( 0 )
+    {
+    }
 
 private:
     struct SCENE
@@ -31,7 +33,12 @@ private:
     // grid
     ID3D11Buffer* _gridVertexBuffer;
     ID3D11Buffer* _gridIndexBuffer;
-    uint          _numOfIndices;
+    uint          _gridNumOfIndices;
+
+    // sphere
+    ID3D11Buffer* _sphereVertexBuffer;
+    ID3D11Buffer* _sphereIndexBuffer;
+    uint          _sphereNumOfIndices;
 
 private:
     virtual void _initModules();
