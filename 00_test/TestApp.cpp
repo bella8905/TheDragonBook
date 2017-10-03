@@ -86,7 +86,7 @@ void CTestApp::_initGrid()
     }
 
     SMesh sphere;
-    geoGen.BuildSphere( 1.f, 20, 20, red, sphere );
+    geoGen.BuildGeosphere( 3.f, 3, red, sphere );
     _sphereNumOfIndices = ( uint )sphere._indices.size();
     if( !_d3d->CreateBufferFromMeshData( sphere, &_sphereVertexBuffer, &_sphereIndexBuffer ) )
     {
