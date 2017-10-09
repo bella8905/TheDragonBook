@@ -10,6 +10,7 @@
 #include "View.h"
 #include "Camera.h"
 #include "GeoGenerator.h"
+#include "Effect.h"
 
 #include "TestApp.h"
 
@@ -63,6 +64,20 @@ void CTestApp::SCENE::Draw()
     {
         Shaders_BindShader( &_objects[i] );
         _objects[i].Draw();
+    }
+}
+
+void CTestApp::_initEffect()
+{
+    _effect = new CEffect( _d3d->GetDevice(), L"unlit.fxo" );
+}
+
+void CTestApp::_deinitEffect()
+{
+    if( _effect != nullptr )
+    {
+        delete _effect;
+        _effect = nullptr;
     }
 }
 
@@ -122,6 +137,7 @@ void CTestApp::_initModules()
     // init geo
     CGeoContainer::GetInstance().Init( _d3d->GetDevice(), _d3d->GetDeviceContext() );
     // init shader
+    _initEffect();
     g_mvpVS.Init( _d3d->GetDevice(), _d3d->GetDeviceContext() );
     g_simpleColorPS.Init( _d3d->GetDevice(), _d3d->GetDeviceContext() );
     Shaders_SetAsActive( VS, &g_mvpVS );
@@ -134,6 +150,7 @@ void CTestApp::_deinitModules()
 {
     _deinitGrid();
     // shaders
+    _deinitEffect();
     g_mvpVS.Deinit();
     g_simpleColorPS.Deinit();
     Shaders_Clear();

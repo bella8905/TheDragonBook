@@ -6,6 +6,7 @@
 #include "System.h"
 
 class CCamera;
+class CEffect;
 
 class CTestApp : public CGraphics
 {
@@ -40,11 +41,16 @@ private:
     ID3D11Buffer* _sphereIndexBuffer;
     uint          _sphereNumOfIndices;
 
+    // effect
+    CEffect*      _effect;
+
 private:
     virtual void _initModules();
     virtual void _deinitModules();
     virtual void _initScene();
 
+    void _initEffect();
+    void _deinitEffect();
     void _initGrid();
     void _deinitGrid();
     void _drawGrid();

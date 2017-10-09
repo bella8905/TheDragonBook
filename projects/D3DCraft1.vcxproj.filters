@@ -10,6 +10,12 @@
     <Filter Include="utl">
       <UniqueIdentifier>{d16f21a6-6e10-431b-8bd4-37982167e907}</UniqueIdentifier>
     </Filter>
+    <Filter Include="FX">
+      <UniqueIdentifier>{a24401f9-5d8b-4262-8e24-c66732bba1ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib">
+      <UniqueIdentifier>{5de5ef54-6440-456b-9ebe-2c1a54cf2824}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\bella_utl\Utl_File.cpp">
@@ -65,6 +71,15 @@
     </ClCompile>
     <ClCompile Include="..\common\shared\GeoGenerator.cpp">
       <Filter>shared</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\shared\Effect.cpp">
+      <Filter>shared</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\d3d_utl\DDSTextureLoader.cpp">
+      <Filter>lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\d3d_utl\dxerr.cpp">
+      <Filter>lib</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -131,10 +146,24 @@
     <ClInclude Include="..\common\shared\GeoGenerator.h">
       <Filter>shared</Filter>
     </ClInclude>
+    <ClInclude Include="..\common\shared\Effect.h">
+      <Filter>shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\d3d_utl\DDSTextureLoader.h">
+      <Filter>lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\d3d_utl\dxerr.h">
+      <Filter>lib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\common\shared\InputKeys.items">
       <Filter>shared</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\common\shaders\unlit.fx">
+      <Filter>FX</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
