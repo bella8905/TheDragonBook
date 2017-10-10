@@ -254,10 +254,8 @@ bool CEffect::SetParameter( std::string t_name, glm::mat4 t_mat )
             // unless a declare to use row major matrix is explicitly put.
             // Effect framework expects row major matrix ( which is somewhat the usual conduct for most D3D applications )
             // and it transposes the matrix before uploading it to gpu
-            // Just transpose the matrix as a quick fix before I can fix it in the effect library!!
-            // TODO: FIX IT IN EFFECT LIB
-            glm::mat4 mat = glm::transpose( t_mat );
-            fVal->SetMatrix( &mat[0][0] );
+            // Just use set matrix transpose as a quick fix.
+            fVal->SetMatrixTranspose( &t_mat[0][0] );
             ret = true;
         }
         else

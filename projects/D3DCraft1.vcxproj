@@ -39,7 +39,6 @@
     <ClCompile Include="..\common\shared\Object.cpp" />
     <ClCompile Include="..\common\shared\Shader.cpp" />
     <ClCompile Include="..\common\shared\System.cpp" />
-    <ClCompile Include="..\common\shared\Vertex.cpp" />
     <ClCompile Include="..\common\shared\View.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -66,7 +65,6 @@
     <ClInclude Include="..\common\shared\Object.h" />
     <ClInclude Include="..\common\shared\Shader.h" />
     <ClInclude Include="..\common\shared\System.h" />
-    <ClInclude Include="..\common\shared\Vertex.h" />
     <ClInclude Include="..\common\shared\View.h" />
   </ItemGroup>
   <ItemGroup>
