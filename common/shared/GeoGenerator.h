@@ -10,8 +10,8 @@ struct SVertex
     glm::vec3 _normal;
     glm::vec3 _tangent;
     glm::vec4 _color;
-    glm::vec2 _texCoord0;
-    glm::vec2 _texCoord1;
+    glm::vec2 _tex0;
+    glm::vec2 _tex1;
 
     //////////////////////////////////////////////////////////////////////////
     // constructors
@@ -24,7 +24,7 @@ struct SVertex
     SVertex( glm::vec3 t_pos, glm::vec2 t_texCoord0, glm::vec2 t_texCoord1 = { 0.f, 0.f } );
 
     // lit vertex
-	SVertex( glm::vec3 t_pos, glm::vec3 t_normal, glm::vec4 t_color );
+    SVertex( glm::vec3 t_pos, glm::vec3 t_normal, glm::vec4 t_color );
     SVertex( glm::vec3 t_pos, glm::vec3 t_normal, glm::vec3 t_tangent, glm::vec4 t_color );
     SVertex( glm::vec3 t_pos, glm::vec3 t_normal, glm::vec3 t_tangent, glm::vec2 t_texCoord0, glm::vec2 t_texCoord1 = { 0.f, 0.f } );
 };
@@ -43,10 +43,10 @@ public:
 
 public:
     void BuildCube( SMesh& t_meshOut );
-    void BuildSphere( float t_radius, uint t_slices, uint t_stacks, glm::vec4 t_color,  SMesh& t_meshOut );
+    void BuildSphere( float t_radius, uint t_slices, uint t_stacks, glm::vec4 t_color, SMesh& t_meshOut );
     // the triangles of the sphere do not have equal areas
     // and it has poles.
-    // A geosphere approximates a sphere using triangles 
+    // A geosphere approximates a sphere using triangles
     // with almost equal areas as well as equal side lengths
     void BuildGeosphere( float t_radius, uint t_numSubs, glm::vec4 t_color, SMesh& t_meshOut );
 

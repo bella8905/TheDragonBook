@@ -6,30 +6,30 @@
 
 SVertex::SVertex( glm::vec3 t_pos, glm::vec4 t_color )
     : _position( t_pos ), _color( t_color )
-    , _normal( 0.f ), _tangent( 0.f ), _texCoord0( 0.f ), _texCoord1( 0.f )
+    , _normal( 0.f ), _tangent( 0.f ), _tex0( 0.f ), _tex1( 0.f )
 {
 }
 
 SVertex::SVertex( glm::vec3 t_pos, glm::vec2 t_texCoord0, glm::vec2 t_texCoord1 )
-    : _position( t_pos ), _texCoord0( t_texCoord0 ), _texCoord1( t_texCoord1 )
+    : _position( t_pos ), _tex0( t_texCoord0 ), _tex1( t_texCoord1 )
     , _normal( 0.f ), _tangent( 0.f ), _color( 0.f )
 {
 }
 
 SVertex::SVertex( glm::vec3 t_pos, glm::vec3 t_normal, glm::vec4 t_color )
-    : _position( t_pos ), _normal( t_normal ),  _color( t_color )
-    , _texCoord0( 0.f ), _texCoord1( 0.f ) /*, _tangent(  ) */
+    : _position( t_pos ), _normal( t_normal ), _color( t_color )
+    , _tex0( 0.f ), _tex1( 0.f ) /*, _tangent(  ) */
 {
 }
 
 SVertex::SVertex( glm::vec3 t_pos, glm::vec3 t_normal, glm::vec3 t_tangent, glm::vec4 t_color )
     : _position( t_pos ), _normal( t_normal ), _tangent( t_tangent ), _color( t_color )
-    , _texCoord0( 0.f ), _texCoord1( 0.f )
+    , _tex0( 0.f ), _tex1( 0.f )
 {
 }
 
 SVertex::SVertex( glm::vec3 t_pos, glm::vec3 t_normal, glm::vec3 t_tangent, glm::vec2 t_texCoord0, glm::vec2 t_texCoord1 /*= { 0.f, 0.f }*/ )
-    : _position( t_pos ), _normal( t_normal ), _tangent( t_tangent ), _texCoord0( t_texCoord0 ), _texCoord1( t_texCoord1 )
+    : _position( t_pos ), _normal( t_normal ), _tangent( t_tangent ), _tex0( t_texCoord0 ), _tex1( t_texCoord1 )
     , _color( 0.f )
 
 {
@@ -40,7 +40,7 @@ void CGeoGenerator::BuildCube( SMesh& t_meshOut )
 }
 
 void CGeoGenerator::BuildSphere( float t_radius, uint t_slices, uint t_stacks, glm::vec4 t_color, SMesh& t_meshOut )
-{   
+{
     uint numOfVertices = ( t_stacks + 1 ) * t_slices;
     t_meshOut._vertices.resize( numOfVertices );
 
@@ -50,13 +50,13 @@ void CGeoGenerator::BuildSphere( float t_radius, uint t_slices, uint t_stacks, g
     // iterating through points
     for( uint stackIdx = 0; stackIdx <= t_stacks; ++stackIdx )
     {
-        float phi = g_Pi * ( (float)stackIdx / (float)t_stacks );
+        float phi = g_Pi * ( ( float )stackIdx / ( float )t_stacks );
         float y = cosf( phi );
         float yr = sinf( phi );
 
         for( uint sliceIdx = 0; sliceIdx < t_slices; ++sliceIdx )
         {
-            float theta = 2 * g_Pi * ( (float)sliceIdx / (float)t_slices );
+            float theta = 2 * g_Pi * ( ( float )sliceIdx / ( float )t_slices );
             float x = yr * sinf( theta );
             float z = yr * cosf( theta );
 
@@ -131,7 +131,6 @@ void CGeoGenerator::BuildGeosphere( float t_radius, uint t_numSubs, glm::vec4 t_
     {
         t_meshOut._indices[i] = indices[i];
     }
-
 
     for( uint i = 0; i < t_numSubs; ++i )
     {
@@ -226,7 +225,7 @@ void CGeoGenerator::_subdivide( SMesh& t_meshInOut )
 	// *-----*-----*
     // v0    m2     v2
 
-    uint numTris = inputCopy._indices.size() / 3;
+    uint numTris = ( uint )inputCopy._indices.size() / 3;
     for( uint i = 0; i < numTris; ++i )
     {
         SVertex v0 = inputCopy._vertices[inputCopy._indices[i * 3 + 0]];

@@ -1,14 +1,54 @@
 #include <fstream>
 #include <vector>
 
+#include "GeoGenerator.h"
 #include "D3DSystem.h"
 #include "Utl_LogMsg.h"
 #include "Utl_Global.h"
 #include "Effect.h"
 
-static const ID3DX11EffectTechnique* CurrentTechnique = nullptr;
+static const D3D11_INPUT_ELEMENT_DESC LayoutDesc_Unlit[] =
+{
+    { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, offsetof( SVertex, _position ) , D3D11_INPUT_PER_VERTEX_DATA , 0 },
+    { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT , 0, offsetof( SVertex, _color ), D3D11_INPUT_PER_VERTEX_DATA , 0 },
+};
 
-CEffect::CEffect( ID3D11Device* t_device, const std::wstring& t_filename ) : _fx( nullptr )
+static const D3D11_INPUT_ELEMENT_DESC LayoutDesc_Lit[] =
+{
+    { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, offsetof( SVertex, _position ) , D3D11_INPUT_PER_VERTEX_DATA , 0 },
+    { "NORMAL", 0, DXGI_FORMAT_R32G32B32A32_FLOAT , 0, offsetof( SVertex, _normal ), D3D11_INPUT_PER_VERTEX_DATA , 0 },
+};
+
+static const D3D11_INPUT_ELEMENT_DESC LayoutDesc_UnlitTextured[] =
+{
+    { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, offsetof( SVertex, _position ) , D3D11_INPUT_PER_VERTEX_DATA , 0 },
+    { "TEX0", 0, DXGI_FORMAT_R32G32B32A32_FLOAT , 0, offsetof( SVertex, _tex0 ), D3D11_INPUT_PER_VERTEX_DATA , 0 },
+    { "TEX1", 0, DXGI_FORMAT_R32G32B32A32_FLOAT , 0, offsetof( SVertex, _tex1 ), D3D11_INPUT_PER_VERTEX_DATA , 0 },
+};
+
+static const D3D11_INPUT_ELEMENT_DESC LayoutDesc_LitTextured[] =
+{
+    { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, offsetof( SVertex, _position ) , D3D11_INPUT_PER_VERTEX_DATA , 0 },
+    { "NORMAL", 0, DXGI_FORMAT_R32G32B32A32_FLOAT , 0, offsetof( SVertex, _normal ), D3D11_INPUT_PER_VERTEX_DATA , 0 },
+    { "TANGENT", 0, DXGI_FORMAT_R32G32B32A32_FLOAT , 0, offsetof( SVertex, _tangent ), D3D11_INPUT_PER_VERTEX_DATA , 0 },
+    { "TEX0", 0, DXGI_FORMAT_R32G32B32A32_FLOAT , 0, offsetof( SVertex, _tex0 ), D3D11_INPUT_PER_VERTEX_DATA , 0 },
+    { "TEX1", 0, DXGI_FORMAT_R32G32B32A32_FLOAT , 0, offsetof( SVertex, _tex1 ), D3D11_INPUT_PER_VERTEX_DATA , 0 },
+};
+
+static struct
+{
+    const D3D11_INPUT_ELEMENT_DESC* _desc;
+    uint _numOfDesc;
+}InputLayoutDesc[LAYOUT_COUNTER] = {
+    { LayoutDesc_Unlit, array_size_of( LayoutDesc_Unlit ) },
+    { LayoutDesc_Lit, array_size_of( LayoutDesc_Lit ) },
+    { LayoutDesc_UnlitTextured, array_size_of( LayoutDesc_UnlitTextured ) },
+    { LayoutDesc_LitTextured, array_size_of( LayoutDesc_LitTextured ) },
+};
+
+static ID3DX11EffectTechnique* CurrentTechnique = nullptr;
+
+CEffect::CEffect( ID3D11Device* t_device, const std::wstring& t_filename ) : _fx( nullptr ), _IALayout( nullptr )
 {
     std::ifstream fin( t_filename, std::ios::binary );
 
@@ -122,6 +162,7 @@ CEffect::CEffect( ID3D11Device* t_device, const std::wstring& t_filename ) : _fx
 CEffect::~CEffect()
 {
     ReleaseCOM( _fx );
+    ReleaseCOM( _IALayout );
 }
 
 bool CEffect::SetParameter( std::string t_name, float t_scalar )
@@ -209,7 +250,14 @@ bool CEffect::SetParameter( std::string t_name, glm::mat4 t_mat )
         auto fVal = got->second->AsMatrix();
         if( fVal != nullptr )
         {
-            fVal->SetMatrix( &t_mat[0][0] );
+            // hlsl now uses col major matrix convention
+            // unless a declare to use row major matrix is explicitly put.
+            // Effect framework expects row major matrix ( which is somewhat the usual conduct for most D3D applications )
+            // and it transposes the matrix before uploading it to gpu
+            // Just transpose the matrix as a quick fix before I can fix it in the effect library!!
+            // TODO: FIX IT IN EFFECT LIB
+            glm::mat4 mat = glm::transpose( t_mat );
+            fVal->SetMatrix( &mat[0][0] );
             ret = true;
         }
         else
@@ -275,7 +323,22 @@ bool CEffect::SetTechniqueAsCurrent( std::string t_name )
     return ret;
 }
 
-const ID3DX11EffectTechnique* CEffect::GetCurrentTechnique()
+ID3DX11EffectTechnique* CEffect::GetCurrentTechnique()
 {
     return CurrentTechnique;
+}
+
+void CEffect::InitIALayout( ID3D11Device* t_device, ID3D11DeviceContext* t_deviceContext, Effect_IALayoutType t_IAType )
+{
+    if( t_device == nullptr || _fx == nullptr ) return;
+    D3DX11_PASS_DESC passDesc;
+    ID3DX11EffectTechnique* technique = _techniques.begin()->second;
+    if( technique == nullptr ) return;
+    ID3DX11EffectPass* pass = technique->GetPassByIndex( 0 );
+    if( pass == nullptr ) return;
+    HR( pass->GetDesc( &passDesc ) );
+    HR( t_device->CreateInputLayout( InputLayoutDesc[t_IAType]._desc, InputLayoutDesc[t_IAType]._numOfDesc,
+        passDesc.pIAInputSignature, passDesc.IAInputSignatureSize, &_IALayout ) );
+
+    t_deviceContext->IASetInputLayout( _IALayout );
 }

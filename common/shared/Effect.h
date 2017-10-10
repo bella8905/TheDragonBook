@@ -6,6 +6,17 @@
 #include "glm/glm.hpp"
 #include "d3dx11Effect.h"
 
+enum Effect_IALayoutType
+{
+    UNLIT_COLORED,
+    LIT_COLORED,
+    UNLIT_TEXTURED,
+    LIT_TEXTURED,
+
+    //
+    LAYOUT_COUNTER,
+};
+
 class CEffect
 {
 public:
@@ -18,9 +29,11 @@ private:
 
 private:
     // techniques
-    std::unordered_map<std::string, const ID3DX11EffectTechnique*> _techniques;
+    std::unordered_map<std::string, ID3DX11EffectTechnique*> _techniques;
     // global const variables
     std::unordered_map<std::string, ID3DX11EffectVariable*> _variables;
+
+    ID3D11InputLayout* _IALayout;
 
 protected:
     ID3DX11Effect* _fx;
@@ -40,5 +53,7 @@ public:
     // raw
     bool SetParameter( std::string t_name, void* t_rawVal, uint t_size );
 
-    const ID3DX11EffectTechnique* GetCurrentTechnique();
+    ID3DX11EffectTechnique* GetCurrentTechnique();
+
+    void InitIALayout( ID3D11Device* t_device, ID3D11DeviceContext* t_deviceContext, Effect_IALayoutType t_IAType );
 };

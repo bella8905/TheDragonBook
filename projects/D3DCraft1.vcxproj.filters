@@ -81,6 +81,9 @@
     <ClCompile Include="..\..\common\d3d_utl\dxerr.cpp">
       <Filter>lib</Filter>
     </ClCompile>
+    <ClCompile Include="..\common\shared\Vertex.cpp">
+      <Filter>shared</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\bella_utl\Utl_File.h">
@@ -155,10 +158,16 @@
     <ClInclude Include="..\..\common\d3d_utl\dxerr.h">
       <Filter>lib</Filter>
     </ClInclude>
+    <ClInclude Include="..\common\shared\Vertex.h">
+      <Filter>shared</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\common\shared\InputKeys.items">
       <Filter>shared</Filter>
+    </None>
+    <None Include="..\common\shaders\vertex.fxh">
+      <Filter>FX</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
