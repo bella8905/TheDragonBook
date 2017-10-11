@@ -17,6 +17,18 @@ enum Effect_IALayoutType
     LAYOUT_COUNTER,
 };
 
+class CTechniue
+{
+public:
+    CTechniue( ID3DX11EffectTechnique* t_tech ) : _tech( t_tech )
+    {
+    }
+
+private:
+    ID3DX11EffectTechnique* _tech;
+    uint _numOfPasses;
+};
+
 class CEffect
 {
 public:
@@ -53,7 +65,7 @@ public:
     // raw
     bool SetParameter( std::string t_name, void* t_rawVal, uint t_size );
 
-    ID3DX11EffectTechnique* GetCurrentTechnique();
-
     void InitIALayout( ID3D11Device* t_device, ID3D11DeviceContext* t_deviceContext, Effect_IALayoutType t_IAType );
 };
+
+ID3DX11EffectTechnique* Effect_GetCurrentTechnique();

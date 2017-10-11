@@ -53,7 +53,6 @@ private:
     void _deinitEffect();
     void _initGrid();
     void _deinitGrid();
-    void _drawGrid();
 
 protected:
     virtual void _update();

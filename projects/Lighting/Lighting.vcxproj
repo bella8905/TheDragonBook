@@ -1,0 +1,214 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\bella_utl\Utl_File.cpp" />
+    <ClCompile Include="..\..\..\..\bella_utl\Utl_FileBrowserDialog.cpp" />
+    <ClCompile Include="..\..\..\..\bella_utl\Utl_FileStreamHandler.cpp" />
+    <ClCompile Include="..\..\..\..\bella_utl\Utl_LogMsg.cpp" />
+    <ClCompile Include="..\..\..\..\bella_utl\Utl_Math.cpp" />
+    <ClCompile Include="..\..\..\common\d3d_utl\DDSTextureLoader.cpp" />
+    <ClCompile Include="..\..\..\common\d3d_utl\dxerr.cpp" />
+    <ClCompile Include="..\..\00_test\main.cpp" />
+    <ClCompile Include="..\..\00_test\TestApp.cpp" />
+    <ClCompile Include="..\..\common\shared\Camera.cpp" />
+    <ClCompile Include="..\..\common\shared\D3DSystem.cpp" />
+    <ClCompile Include="..\..\common\shared\Effect.cpp" />
+    <ClCompile Include="..\..\common\shared\FPS.cpp" />
+    <ClCompile Include="..\..\common\shared\GeoGenerator.cpp" />
+    <ClCompile Include="..\..\common\shared\Geometry.cpp" />
+    <ClCompile Include="..\..\common\shared\Graphics.cpp" />
+    <ClCompile Include="..\..\common\shared\Input.cpp" />
+    <ClCompile Include="..\..\common\shared\Object.cpp" />
+    <ClCompile Include="..\..\common\shared\Shader.cpp" />
+    <ClCompile Include="..\..\common\shared\System.cpp" />
+    <ClCompile Include="..\..\common\shared\SystemInterface.cpp" />
+    <ClCompile Include="..\..\common\shared\View.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\bella_utl\Utl_File.h" />
+    <ClInclude Include="..\..\..\..\bella_utl\Utl_FileBrowserDialog.h" />
+    <ClInclude Include="..\..\..\..\bella_utl\Utl_FileStreamHandler.h" />
+    <ClInclude Include="..\..\..\..\bella_utl\Utl_Global.h" />
+    <ClInclude Include="..\..\..\..\bella_utl\Utl_Include.h" />
+    <ClInclude Include="..\..\..\..\bella_utl\Utl_LogMsg.h" />
+    <ClInclude Include="..\..\..\..\bella_utl\Utl_Math.h" />
+    <ClInclude Include="..\..\..\..\bella_utl\Utl_Time.h" />
+    <ClInclude Include="..\..\..\common\d3d_utl\DDSTextureLoader.h" />
+    <ClInclude Include="..\..\..\common\d3d_utl\dxerr.h" />
+    <ClInclude Include="..\..\00_test\TestApp.h" />
+    <ClInclude Include="..\..\common\shared\Camera.h" />
+    <ClInclude Include="..\..\common\shared\D3DSystem.h" />
+    <ClInclude Include="..\..\common\shared\DefineMain.h" />
+    <ClInclude Include="..\..\common\shared\Effect.h" />
+    <ClInclude Include="..\..\common\shared\FPS.h" />
+    <ClInclude Include="..\..\common\shared\GeoGenerator.h" />
+    <ClInclude Include="..\..\common\shared\Geometry.h" />
+    <ClInclude Include="..\..\common\shared\Graphics.h" />
+    <ClInclude Include="..\..\common\shared\Input.h" />
+    <ClInclude Include="..\..\common\shared\Object.h" />
+    <ClInclude Include="..\..\common\shared\Shader.h" />
+    <ClInclude Include="..\..\common\shared\System.h" />
+    <ClInclude Include="..\..\common\shared\SystemInterface.h" />
+    <ClInclude Include="..\..\common\shared\View.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\common\shared\InputKeys.items" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{a8f2dbe8-c001-4066-bb79-b7579e51232f}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Lighting</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <ProjectName>Lighting</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <LibraryPath>D:\Works\Projects_Bella\CG\D3D\common\libs\win32;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <LibraryPath>D:\Works\Projects_Bella\CG\D3D\common\libs\x64;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <LibraryPath>D:\Works\Projects_Bella\CG\D3D\common\libs\win32;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <LibraryPath>D:\Works\Projects_Bella\CG\D3D\common\libs\x64;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Works\Projects_Bella\CG\D3D\common\libs\include;D:\Works\Projects_Bella\CG\D3D\TheDragonBook\common\shared;D:\Works\Projects_Bella\CG\common;D:\Works\Projects_Bella\CG\bella_utl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>Effects11d.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Works\Projects_Bella\CG\D3D\common\d3d_utl;D:\Works\Projects_Bella\CG\D3D\common\libs\include;D:\Works\Projects_Bella\CG\D3D\TheDragonBook\common\shared;D:\Works\Projects_Bella\CG\common;D:\Works\Projects_Bella\CG\bella_utl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>Effects11d.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Works\Projects_Bella\CG\D3D\common\libs\include;D:\Works\Projects_Bella\CG\D3D\TheDragonBook\common\shared;D:\Works\Projects_Bella\CG\common;D:\Works\Projects_Bella\CG\bella_utl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>Effects11.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Works\Projects_Bella\CG\D3D\common\d3d_utl;D:\Works\Projects_Bella\CG\D3D\common\libs\include;D:\Works\Projects_Bella\CG\D3D\TheDragonBook\common\shared;D:\Works\Projects_Bella\CG\common;D:\Works\Projects_Bella\CG\bella_utl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>Effects11.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

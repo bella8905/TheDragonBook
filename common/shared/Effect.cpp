@@ -321,7 +321,7 @@ bool CEffect::SetTechniqueAsCurrent( std::string t_name )
     return ret;
 }
 
-ID3DX11EffectTechnique* CEffect::GetCurrentTechnique()
+ID3DX11EffectTechnique* Effect_GetCurrentTechnique()
 {
     return CurrentTechnique;
 }
