@@ -158,8 +158,8 @@ bool CTestApp::_render()
 
     _d3d->BeginScene( 0.8f, 0.8f, 0.8f, 1.f );
 
-    _effect->SetParameter( "view", View_GetActive()->GetWorld2ViewMatrix() );
-    _effect->SetParameter( "projection", View_GetActive()->GetView2ProjMatrix() );
+    _effect->SetParameter( "gView", View_GetActive()->GetWorld2ViewMatrix() );
+    _effect->SetParameter( "gProj", View_GetActive()->GetView2ProjMatrix() );
 
     D3DX11_TECHNIQUE_DESC techDesc;
     Effect_GetCurrentTechnique()->GetDesc( &techDesc );
@@ -169,7 +169,7 @@ bool CTestApp::_render()
         pass->Apply( 0, _d3d->GetDeviceContext() );
 
         _d3d->SetRS( WIREFRAME );
-        _effect->SetParameter( "model", glm::mat4( 1.f ) );
+        _effect->SetParameter( "gModel", glm::mat4( 1.f ) );
         _d3d->DrawIndexed( _gridVertexBuffer, _gridIndexBuffer, _gridNumOfIndices, D3D11_PRIMITIVE_TOPOLOGY_LINELIST );
 
         _d3d->SetRS( FILLED );

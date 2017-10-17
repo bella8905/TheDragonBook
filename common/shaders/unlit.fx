@@ -11,9 +11,9 @@ struct VS_OUTPUT
 VS_OUTPUT VS( VERTEX_UNLIT input )
 {
     VS_OUTPUT output = ( VS_OUTPUT )0;
-    output.pos = mul( model, float4( input.position, 1.f ) );
-    output.pos = mul( view, output.pos );
-    output.pos = mul( projection, output.pos );
+    output.pos = mul( gModel, float4( input.position, 1.f ) );
+    output.pos = mul( gView, output.pos );
+    output.pos = mul( gProj, output.pos );
     output.color = input.color;
     return output;
 }

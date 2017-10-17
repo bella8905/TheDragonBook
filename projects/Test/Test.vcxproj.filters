@@ -84,6 +84,9 @@
     <ClCompile Include="..\..\..\..\bella_utl\Utl_Math.cpp">
       <Filter>utl</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\common\shared\Model.cpp">
+      <Filter>shared</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\common\d3d_utl\DDSTextureLoader.h">
@@ -160,6 +163,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\bella_utl\Utl_Time.h">
       <Filter>utl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\shared\Model.h">
+      <Filter>shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\shared\Vertex.h">
+      <Filter>shared</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

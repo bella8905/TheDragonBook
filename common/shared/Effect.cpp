@@ -1,7 +1,7 @@
 #include <fstream>
 #include <vector>
 
-#include "GeoGenerator.h"
+#include "Vertex.h"
 #include "D3DSystem.h"
 #include "Utl_LogMsg.h"
 #include "Utl_Global.h"

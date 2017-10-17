@@ -5,7 +5,7 @@
 
 #include "Graphics.h"
 #include "View.h"
-#include "GeoGenerator.h"
+#include "Vertex.h"
 #include "D3DSystem.h"
 
 /////////////////////////////////////////////////////////////////
@@ -731,11 +731,11 @@ void CD3D::SetRS( RasterizerState t_rs )
 
     switch( t_rs )
     {
-        case FILLED:
-            _deviceContext->RSSetState( _rsFilled );
-            break;
-        case WIREFRAME:
-            _deviceContext->RSSetState( _rsWireframe );
-            break;
+    case FILLED:
+        _deviceContext->RSSetState( _rsFilled );
+        break;
+    case WIREFRAME:
+        _deviceContext->RSSetState( _rsWireframe );
+        break;
     }
 }
