@@ -11,6 +11,9 @@
 #include "Camera.h"
 #include "GeoGenerator.h"
 #include "Effect.h"
+#include "Model.h"
+
+#include "Utl_FileBrowserDialog.h"
 
 #include "TestApp.h"
 
@@ -102,10 +105,24 @@ void CTestApp::_initGrid()
         LogError << "error creating grid" << LogEndl;
     }
 
-    SMesh sphere;
-    geoGen.BuildGeosphere( 3.f, 3, red, sphere );
-    _sphereNumOfIndices = ( uint )sphere._indices.size();
-    if( !_d3d->CreateBufferFromMeshData( sphere, &_sphereVertexBuffer, &_sphereIndexBuffer ) )
+    //     SMesh sphere;
+    //     geoGen.BuildGeosphere( 3.f, 3, red, sphere );
+    //     _sphereNumOfIndices = ( uint )sphere._indices.size();
+    //     if( !_d3d->CreateBufferFromMeshData( sphere, &_sphereVertexBuffer, &_sphereIndexBuffer ) )
+    //     {
+    //         LogError << "error creating sphere" << LogEndl;
+    //     }
+
+    SMesh modelMesh;
+    Utl::CFileBrowserDialog browser;
+    std::wstring ws( browser.ShowDialog() );
+    std::string filename( ws.begin(), ws.end() );
+    CModel model( filename );
+    modelMesh._vertices = model._vertices;
+    modelMesh._indices = model._indices;
+    _sphereNumOfIndices = ( uint )modelMesh._indices.size();
+
+    if( !_d3d->CreateBufferFromMeshData( modelMesh, &_sphereVertexBuffer, &_sphereIndexBuffer ) )
     {
         LogError << "error creating sphere" << LogEndl;
     }

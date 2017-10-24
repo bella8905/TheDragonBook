@@ -89,12 +89,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\common\d3d_utl\DDSTextureLoader.h">
-      <Filter>lib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\common\d3d_utl\dxerr.h">
-      <Filter>lib</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\common\shared\Camera.h">
       <Filter>shared</Filter>
     </ClInclude>

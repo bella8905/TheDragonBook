@@ -8,6 +8,12 @@
 #include "glm/glm.hpp"
 #include "Utl_Global.h"
 
+//////////////////////////////////////////////////////////////////////////
+//
+// TODO: support scene graph
+//
+//////////////////////////////////////////////////////////////////////////
+
 class CEffect;
 struct aiMesh;
 struct aiScene;
@@ -59,17 +65,21 @@ private:
     };
 
     std::vector<SMaterial> _materials;
-    std::vector<SVertex> _vertices;
-    std::vector<uint> _indices;
     std::vector<SPrim> _prims;
 
     // TODO:
     // have a texture manager and move the collection there.
     std::unordered_map<std::string, ID3D11ShaderResourceView*> textures;
 
+    bool _bDumpSceneInfo;
+
 private:
     void _loadModelFromFile( std::string t_filename );
     void _initScene( const aiScene* t_aiScene );
-    void _initPrim( const aiMesh* t_aiMesh, SPrim& t_prim );
+    void _initPrim( const aiMesh* t_aiMesh, SPrim& t_prim, std::vector<SVertex>& t_vertices, std::vector<uint>& t_indices );
     void _initMaterial( const aiMaterial* t_aiMat, SMaterial& t_material );
+
+public:
+    std::vector<SVertex> _vertices;
+    std::vector<uint> _indices;
 };
